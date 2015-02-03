@@ -30,6 +30,7 @@ exports.signInUser = function(req, res) {
       if (result) {
         req.session.regenerate(function(){
           req.session.user = username;
+          console.log(req.session.user);
           res.redirect('/');
         });
       } else {

@@ -42,8 +42,8 @@ app.set('views', __dirname);
 
 module.exports = app;
 
-app.get('/', function(request, response) {
-  response.redirect('./index.html');
+app.get('/', function (req, res) {
+  res.sendFile(__dirname, '/index.html'); //home page
 });
 
 //when a user clicks his native and desired language and clicks go, send a post request to api/languages
