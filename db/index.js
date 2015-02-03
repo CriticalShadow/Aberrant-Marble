@@ -11,10 +11,10 @@ if (process.env.languageappdb) {
   var sequelize = new Sequelize('languageapp', 'aberrantmarble', 'hr23greenfield', {
     host: process.env.languageappdb,
     port: process.env.languageappdbport,
-    dialect: 'mysql',
+    dialect: 'mysql'
   });  
 } else { var sequelize = new Sequelize('languageapp', 'root', '', {
-  dialect: 'mysql',
+  dialect: 'mysql'
 });
 }
 
