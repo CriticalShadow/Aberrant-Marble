@@ -30,7 +30,9 @@ passport.use(new FacebookStrategy({
         } else {
           Users.create({ 
             username: profile.name.givenName + profile.name.familyName,
-            facebookId: profile.id
+            facebookId: profile.id,
+            firstname: profile.name.givenName,
+            lastname: profile.name.familyName
           });
           done(null, profile);
         }
