@@ -1,3 +1,28 @@
+// (function() {
+//     'use strict';
+//     angular
+//         .module('languageApp')
+//         .config(config);
+
+//     function config ($stateProvider, $urlRouterProvider) {
+//       $urlRouterProvider.otherwise("/home");
+//       $stateProvider
+//         .state('home', {
+//           url: '/',
+//           templateUrl: '../index.html'
+//           controller: 'selectLanguageController'
+//         })
+//         .state('signup', {
+//           url: '/signup',
+//           templateUrl: '../signup.html'
+//         })
+//         .state('signin', {
+//           url: '/signin',
+//           templateUrl: '../signin.html'
+//         });
+//     }
+// })();
+
 angular.module('languageApp', ['translateModule', 'ngFx'])
 
 .controller('selectLanguageController', function($scope, $http, Translate) {
