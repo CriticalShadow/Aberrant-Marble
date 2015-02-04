@@ -1,29 +1,24 @@
-// (function() {
-//     'use strict';
-//     angular
-//         .module('languageApp')
-//         .config(config);
+angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
 
-//     function config ($stateProvider, $urlRouterProvider) {
-//       $urlRouterProvider.otherwise("/home");
-//       $stateProvider
-//         .state('home', {
-//           url: '/',
-//           templateUrl: '../index.html'
-//           controller: 'selectLanguageController'
-//         })
-//         .state('signup', {
-//           url: '/signup',
-//           templateUrl: '../signup.html'
-//         })
-//         .state('signin', {
-//           url: '/signin',
-//           templateUrl: '../signin.html'
-//         });
-//     }
-// })();
+.config(function ($stateProvider, $urlRouterProvider) {
+  $stateProvider
+    .state('home', {
+      url: '/',
+      templateUrl: 'client/home.html',
+      controller: 'selectLanguageController'
+    })
+    .state('signup', {
+      url: '/signup',
+      templateUrl: 'client/signup.html',
+      controller: 'selectLanguageController'
+    })
+    .state('signin', {
+      url: '/signin',
+      templateUrl: 'client/signin.html',
+      controller: 'selectLanguageController'
+    });
 
-angular.module('languageApp', ['translateModule', 'ngFx'])
+})
 
 .controller('selectLanguageController', function ($scope, $http, Translate) {
   $scope.languages = [['English','us'],['Chinese','cn'],['Spanish','es'],['French','fr'],['Italian','it']];
@@ -42,19 +37,20 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
       url: '/api/getroom',
       params: languageSelections
     })
-    .success(function (data){
-      $scope.comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
+    .success(function (data) {
+      $scope.comm = new Icecomm('IbQqKDNCGQS7b94Mllk/iHOJbeSe/UrJJy6l1BbqEbP0fKaK');
 
       $scope.comm.connect(data);
 
+      // Show video of the user
       $scope.comm.on('local', function (options) {
         console.log(options.stream);
         $('#localVideo').attr("src", options.stream);
       });
 
+      // When two people are connected, display the video of the language partner
+      // and show the chat app
       $scope.comm.on('connected', function (options) {
-
-        $scope.waiting = false;
         var foreignVidDiv = $('<div class="inline"></div>');
         foreignVidDiv.append(options.video)
         foreignVidDiv.children().addClass('foreignVideo');
@@ -65,8 +61,11 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
         });
       });
 
+      // When a chat message is received from the language partner,
+      // translate the message using Google Translate and
+      // display both the original message and the translated message
       $scope.comm.on('data', function (options) {
-        $scope.$apply(function () {
+        $scope.$apply(function(){
           Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)
           .then(function (translatedMsg) {
             console.log(translatedMsg);
@@ -74,10 +73,11 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
             $scope.convo += 'Them: ' + options.data + '\n';
             $scope.convo += 'Them (translated): ' + translatedText + '\n';
             $scope.scrollBottom();
-          });
+          })
         });
       })
 
+      // When the language partner leaves, remove the video and chatbox
       $scope.comm.on('disconnect', function (options) {
         document.getElementById(options.callerID).remove();
         $scope.$apply(function () {
@@ -87,6 +87,8 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
     })
   }
 
+  // Function to send a message to the language partner
+  // and display the sent message in the chatbox
   $scope.sendMsg = function () {
     if($scope.msg.trim() !== '') {
       $scope.comm.send($scope.msg);
@@ -97,15 +99,18 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
     }
   }
 
+  // Function to send a chat message when the enter/return
+  // button is pressed
   $scope.handleKeyPress = function (event) {
     if(event.which === 13) {
       $scope.sendMsg();
     }
   }
 
+  // Function to move the scroll bar to the bottom of the textarea
   $scope.scrollBottom = function () {
     var chatBox = document.getElementById('chatBox');
-    chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.scrollTop = 99999;
   }
 
   $scope.changeTopic = function () {
@@ -113,11 +118,34 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
     $scope.topic = $scope.topics[Math.floor(Math.random() * $scope.topics.length)];
   }
 
-});
+})
 
+.controller('createProfileController', function ($scope, $http) {
+  $scope.languages = ['English', 'Chinese', 'Spanish', 'French', 'Italian'];
+  $scope.native = {};
+  $scope.lastname = '';
+  $scope.firstname = '';
+
+   $scope.saveProfile = function () {
+    var data = {};
+    data.firstName = $scope.firstname;
+    data.lastName = $scope.lastname;
+    data.nativeLangs = $scope.native;
+    data.desiredLangs = $scope.desired;
+    
+    return $http({
+      method: 'POST',
+      url: '/api/profile',
+      data: data
+    }).then(function (res) {
+      $location.url('/');
+    });
+  }
+
+});
 angular.module('translateModule', [])
 
-.factory('Translate', function ($http) {
+.factory('Translate', function($http){
 
   // Values are the language codes for Google Translate
   var languageDict = {
@@ -135,17 +163,18 @@ angular.module('translateModule', [])
   // Note: sourceLang specifies the source language of msg and is not required by Google Translate
   // When sourceLang is not passed to Google Translate, Google will auto-detect the language
   // of the string to translate
-  var translateMsg = function (msg, targetLang, sourceLang) {
+  var translateMsg = function(msg, targetLang, sourceLang){
     return $http({
       method: 'GET',
       url: 'https://www.googleapis.com/language/translate/v2',
       params: {
         key: 'AIzaSyBC5v0BqpuJz6g3roho0JUkwzAX0PoR2Dk',
         target: languageDict[targetLang],
+        // source: languageDict[sourceLang],
         q: msg
       }
     })
-    .then(function (res) {
+    .then(function(res){
       return res.data;
     })
   }
@@ -154,27 +183,3 @@ angular.module('translateModule', [])
     translateMsg: translateMsg
   };
 })
-
-.controller('createProfileController', function ($scope, $http, $location) {
-  $scope.languages = [{lang: 'English'}, {lang: 'Chinese'}, {lang: 'Spanish'}, {lang: 'French'}, {lang: 'Italian'}];
-  $scope.native = {};
-  $scope.desired = {};
-  $scope.lastname = '';
-  $scope.firstname = '';
-
-  $scope.saveProfile = function () {
-    var data = {};
-    data.firstName = $scope.firstname;
-    data.lastName = $scope.lastname;
-    data.nativeLangs = $scope.native;
-    data.desiredLangs = $scope.desired;
-    
-    return $http({
-      method: 'POST',
-      url: '/api/profile',
-      data: data
-    }).then(function (res) {
-      $location.url('/');
-    });
-  }
-});
