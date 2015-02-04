@@ -1,3 +1,4 @@
+
 angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
 
 .config(function ($stateProvider, $urlRouterProvider) {
@@ -16,6 +17,11 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
       url: '/signin',
       templateUrl: 'client/signin.html',
       controller: 'selectLanguageController'
+    })
+    .state('profile', {
+      url: '/profile',
+      templateUrl: 'client/profile.html',
+      controller: 'createProfileController'
     });
 
 })
@@ -38,7 +44,7 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
       params: languageSelections
     })
     .success(function (data) {
-      $scope.comm = new Icecomm('IbQqKDNCGQS7b94Mllk/iHOJbeSe/UrJJy6l1BbqEbP0fKaK');
+      $scope.comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
 
       $scope.comm.connect(data);
 
@@ -120,9 +126,10 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
 
 })
 
-.controller('createProfileController', function ($scope, $http) {
-  $scope.languages = ['English', 'Chinese', 'Spanish', 'French', 'Italian'];
+.controller('createProfileController', function ($scope, $http, $location) {
+  $scope.languages = [{lang: 'English'}, {lang: 'Chinese'}, {lang: 'Spanish'}, {lang: 'French'}, {lang: 'Italian'}];
   $scope.native = {};
+  $scope.desired = {};
   $scope.lastname = '';
   $scope.firstname = '';
 
@@ -138,7 +145,7 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
       url: '/api/profile',
       data: data
     }).then(function (res) {
-      $location.url('/');
+      $location.url('/dashboard');
     });
   }
 
@@ -183,3 +190,28 @@ angular.module('translateModule', [])
     translateMsg: translateMsg
   };
 })
+
+.controller('createProfileController', function ($scope, $http, $location) {
+  $scope.languages = [{lang: 'English', id: 1}, {lang: 'Chinese', id: 2}, {lang: 'Spanish', id: 3}, {lang: 'French', id: 4}, {lang: 'Italian', id: 5}];
+  $scope.native = {};
+  $scope.desired = {};
+  $scope.lastname = '';
+  $scope.firstname = '';
+
+  $scope.saveProfile = function () {
+    var data = {};
+    data.firstName = $scope.firstname;
+    data.lastName = $scope.lastname;
+    data.nativeLangs = $scope.native;
+    data.desiredLangs = $scope.desired;
+    
+    return $http({
+      method: 'POST',
+      url: '/api/profile',
+      data: data
+    }).then(function (res) {
+      $location.url('/');
+    });
+  }
+});
+

@@ -1,83 +1,72 @@
-<!DOCTYPE html>
-<html ng-app='languageApp'>
-<head>
-  <link rel="stylesheet" href="/client/css/bower.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <script src="/client/js/vendors.js"></script>
-  <script src="/client/js/app.js"></script>
-</head>
-<body ng-controller='createProfileController'>
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">Language Exchange</a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="/">Home</a></li>
-          <li><a href="/logout">Log Out</a><li>
-        </ul>
-      </div>
+s<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Language Exchange</a>
     </div>
-  </nav>
-  <div class="jumbotron">
-    <div class="container">
-      <div class="col-md-2"></div>
-      <div class="col-md-8">
-        <!-- <form action="/profile" method="post"> -->
-        <form>
-          <h3>Create your profile</h3>
-          <div class="form-group">
-            <label for="firstName">First name</label>
-            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name" ng-model="firstname">
-          </div>
-          <div class="form-group">
-            <label for="lastName">Last name</label>
-            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name" ng-model="lastname">
-          </div>
-          <div class="form-group native">
-            <label for="languages">Native Language Proficiency</label>
-              <div class="checkbox" ng-repeat="lang in languages">
-                <label>
-                  <input type="checkbox" value="" ng-model="native[lang.lang]">
-                  {{ lang.lang }}
-                </label>
-              </div>
-          </div>
-          <div class="form-group desired">
-            <label for="languages">Desired Language Proficiency</label>
-              <div class="checkbox" ng-repeat="lang in languages">
-                <label>
-                  <input type="checkbox" value="" ng-model="desired[lang.lang]">
-                  {{ lang.lang }}
-                </label>
-              </div>
-          </div>
-          <div class="form-group">
-            <label for="exampleInputFile">Upload a photo</label>
-            <input type="file" accept="image/*" onchange="loadFile(event)" id="photo" name="photo">
-            <img id="output" style="display: none; margin-top: 5px;" class="img-thumbnail"/>
-            <script>
-              var loadFile = function (event) {
-                var output = document.getElementById('output');
-                output.style.height = "140px";
-                output.style.width = "140px";
-                output.style.display = "block";
-                output.src = URL.createObjectURL(event.target.files[0]);
-              };
-            </script>
-          </div>
-          <button ng-click="saveProfile()" class="btn btn-success" value="signup">Create</button>
-        </form>
-      </div>
-      <div class="col-md-2"></div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/">Home</a></li>
+        <li><a href="/logout">Log Out</a><li>
+      </ul>
     </div>
   </div>
-</body>
-</html>
+</nav>
+<div class="jumbotron">
+  <div class="container">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <!-- <form action="/profile" method="post"> -->
+      <form>
+        <h3>Create your profile</h3>
+        <div class="form-group">
+          <label for="firstName">First name</label>
+          <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name" ng-model="firstname">
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last name</label>
+          <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name" ng-model="lastname">
+        </div>
+        <div class="form-group native">
+          <label for="languages">Native Language Proficiency</label>
+            <div class="checkbox" ng-repeat="lang in languages">
+              <label>
+                <input type="checkbox" value="" ng-model="native[lang.lang]">
+                {{ lang.lang }}
+              </label>
+            </div>
+        </div>
+        <div class="form-group desired">
+          <label for="languages">Desired Language Proficiency</label>
+            <div class="checkbox" ng-repeat="lang in languages">
+              <label>
+                <input type="checkbox" value="" ng-model="desired[lang.lang]">
+                {{ lang.lang }}
+              </label>
+            </div>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">Upload a photo</label>
+          <input type="file" accept="image/*" onchange="loadFile(event)" id="photo" name="photo">
+          <img id="output" style="display: none; margin-top: 5px;" class="img-thumbnail"/>
+          <script>
+            var loadFile = function (event) {
+              var output = document.getElementById('output');
+              output.style.height = "140px";
+              output.style.width = "140px";
+              output.style.display = "block";
+              output.src = URL.createObjectURL(event.target.files[0]);
+            };
+          </script>
+        </div>
+        <button ng-click="saveProfile()" class="btn btn-success" value="signup">Create</button>
+      </form>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
