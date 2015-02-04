@@ -55,7 +55,7 @@ exports.signUpUser = function(req, res) {
   })
   .then(function(user) {
     if (user) {
-      res.redirect('/profile');
+      res.redirect('/#/profile');
     }
     if (!user) {
       bcrypt.genSalt(10, function(error,result) {
@@ -74,7 +74,7 @@ exports.signUpUser = function(req, res) {
                 console.log('An error occurred while creating the table: user.create', err);
               } else {
                 console.log('User created: ', user.username);
-                res.redirect('/profile');
+                res.redirect('/#/profile');
               }
             });
         });

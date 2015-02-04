@@ -17,12 +17,14 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
       url: '/signin',
       templateUrl: 'client/signin.html',
       controller: 'selectLanguageController'
+    })
+    .state('profile', {
+      url: '/profile',
+      templateUrl: 'client/profile.html',
+      controller: 'createProfileController'
     });
 
 })
-
-angular.module('languageApp', ['translateModule', 'ngFx'])
-
 
 .controller('selectLanguageController', function ($scope, $http, Translate) {
   $scope.languages = [['English','us'],['Chinese','cn'],['Spanish','es'],['French','fr'],['Italian','it']];
@@ -42,7 +44,7 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
       params: languageSelections
     })
     .success(function (data) {
-      $scope.comm = new Icecomm('IbQqKDNCGQS7b94Mllk/iHOJbeSe/UrJJy6l1BbqEbP0fKaK');
+      $scope.comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
 
       $scope.comm.connect(data);
 
@@ -124,9 +126,10 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
 
 })
 
-.controller('createProfileController', function ($scope, $http) {
-  $scope.languages = ['English', 'Chinese', 'Spanish', 'French', 'Italian'];
+.controller('createProfileController', function ($scope, $http, $location) {
+  $scope.languages = [{lang: 'English'}, {lang: 'Chinese'}, {lang: 'Spanish'}, {lang: 'French'}, {lang: 'Italian'}];
   $scope.native = {};
+  $scope.desired = {};
   $scope.lastname = '';
   $scope.firstname = '';
 
@@ -142,7 +145,7 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
       url: '/api/profile',
       data: data
     }).then(function (res) {
-      $location.url('/');
+      $location.url('/dashboard');
     });
   }
 
