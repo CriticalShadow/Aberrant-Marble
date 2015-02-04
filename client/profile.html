@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html ng-app='languageApp'>
 <head>
   <link rel="stylesheet" href="/client/css/bower.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="/client/js/vendors.js"></script>
+  <script src="/client/js/app.js"></script>
 </head>
-<body>
+<body ng-controller='createProfileController'>
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
@@ -29,79 +30,32 @@
     <div class="container">
       <div class="col-md-2"></div>
       <div class="col-md-8">
-        <form action="/profile" method="post">
+        <!-- <form action="/profile" method="post"> -->
+        <form>
           <h3>Create your profile</h3>
           <div class="form-group">
             <label for="firstName">First name</label>
-            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name">
+            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name" ng-model="firstname">
           </div>
           <div class="form-group">
             <label for="lastName">Last name</label>
-            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name">
+            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name" ng-model="lastname">
           </div>
           <div class="form-group native">
             <label for="languages">Native Language Proficiency</label>
-              <div class="checkbox">
+              <div class="checkbox" ng-repeat="lang in languages">
                 <label>
-                  <input type="checkbox" value="checked" name="english_native">
-                  English
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="checked" name="chinese_native">
-                  Chinese
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="checked" name="spanish_native">
-                  Espanol
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="checked" name="french_native">
-                  French
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="checked" name="italian_native">
-                  Italian
+                  <input type="checkbox" value="" ng-model="native[lang.lang]">
+                  {{ lang.lang }}
                 </label>
               </div>
           </div>
           <div class="form-group desired">
             <label for="languages">Desired Language Proficiency</label>
-              <div class="checkbox">
+              <div class="checkbox" ng-repeat="lang in languages">
                 <label>
-                  <input type="checkbox" value="checked" name="english_desired">
-                  English
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="checked" name="chinese_desired">
-                  Chinese
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="checked" name="spanish_desired">
-                  Espanol
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="checked" name="french_desired">
-                  French
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="checked" name="italian_desired">
-                  Italian
+                  <input type="checkbox" value="" ng-model="desired[lang.lang]">
+                  {{ lang.lang }}
                 </label>
               </div>
           </div>
@@ -119,7 +73,7 @@
               };
             </script>
           </div>
-          <button type="submit" class="btn btn-success" value="signup">Create</button>
+          <button ng-click="saveProfile()" class="btn btn-success" value="signup">Create</button>
         </form>
       </div>
       <div class="col-md-2"></div>

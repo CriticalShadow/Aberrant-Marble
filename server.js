@@ -101,7 +101,7 @@ app.post('/logout', User.signInUser);
 app.get('/profile', function (req, res) {
   res.sendFile(path.join(__dirname, '/client/profile.html'));
 });
-app.post('/profile', User.saveProfile);
+app.post('/api/profile', User.saveProfile);
 
 
 //Passport facebook auth

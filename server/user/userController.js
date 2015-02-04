@@ -93,5 +93,5 @@ exports.createProfile = function (req, res) {
 
 exports.saveProfile = function (req, res) {
   console.log(req.body);
-  res.redirect('/');
+  res.sendStatus(201);
 }
