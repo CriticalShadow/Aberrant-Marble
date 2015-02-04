@@ -1,3 +1,4 @@
+
 angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
 
 .config(function ($stateProvider, $urlRouterProvider) {
@@ -19,6 +20,9 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
     });
 
 })
+
+angular.module('languageApp', ['translateModule', 'ngFx'])
+
 
 .controller('selectLanguageController', function ($scope, $http, Translate) {
   $scope.languages = [['English','us'],['Chinese','cn'],['Spanish','es'],['French','fr'],['Italian','it']];
@@ -183,3 +187,28 @@ angular.module('translateModule', [])
     translateMsg: translateMsg
   };
 })
+
+.controller('createProfileController', function ($scope, $http, $location) {
+  $scope.languages = [{lang: 'English', id: 1}, {lang: 'Chinese', id: 2}, {lang: 'Spanish', id: 3}, {lang: 'French', id: 4}, {lang: 'Italian', id: 5}];
+  $scope.native = {};
+  $scope.desired = {};
+  $scope.lastname = '';
+  $scope.firstname = '';
+
+  $scope.saveProfile = function () {
+    var data = {};
+    data.firstName = $scope.firstname;
+    data.lastName = $scope.lastname;
+    data.nativeLangs = $scope.native;
+    data.desiredLangs = $scope.desired;
+    
+    return $http({
+      method: 'POST',
+      url: '/api/profile',
+      data: data
+    }).then(function (res) {
+      $location.url('/');
+    });
+  }
+});
+
