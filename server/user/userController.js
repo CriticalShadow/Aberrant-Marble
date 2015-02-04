@@ -90,3 +90,8 @@ exports.signUpUser = function(req, res) {
 exports.createProfile = function (req, res) {
   res.sendFile(path.join(__dirname , '../../client/profile.html'));
 }
+
+exports.saveProfile = function (req, res) {
+  console.log(req.body);
+  res.redirect('/');
+}

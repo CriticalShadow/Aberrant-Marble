@@ -27,37 +27,102 @@
   </nav>
   <div class="jumbotron">
     <div class="container">
-      <div class="col-md-4"></div>
-      <div class="col-md-4">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
         <form action="/profile" method="post">
           <h3>Create your profile</h3>
           <div class="form-group">
             <label for="firstName">First name</label>
-            <input type="text" class="form-control" id="firstname" placeholder="Enter first name">
+            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name">
           </div>
           <div class="form-group">
             <label for="lastName">Last name</label>
             <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name">
           </div>
-          <div class="form-group">
-            <label for="lastName">Last name</label>
-            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name">
+          <div class="form-group native">
+            <label for="languages">Native Language Proficiency</label>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="english_native">
+                  English
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="chinese_native">
+                  Chinese
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="spanish_native">
+                  Espanol
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="french_native">
+                  French
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="italian_native">
+                  Italian
+                </label>
+              </div>
+          </div>
+          <div class="form-group desired">
+            <label for="languages">Desired Language Proficiency</label>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="english_desired">
+                  English
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="chinese_desired">
+                  Chinese
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="spanish_desired">
+                  Espanol
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="french_desired">
+                  French
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="checked" name="italian_desired">
+                  Italian
+                </label>
+              </div>
           </div>
           <div class="form-group">
-            <label for="languages">Rank Language Proficiency</label>
-            <select multiple class="form-control">
-              <option>English</option>
-              <option>Espanol</option>
-              <option>Francais</option>
-              <option>Chinese</option>
-              <option>Deutsch</option>
-              <option>Italia</option>
-            </select>
+            <label for="exampleInputFile">Upload a photo</label>
+            <input type="file" accept="image/*" onchange="loadFile(event)" id="photo" name="photo">
+            <img id="output" style="display: none; margin-top: 5px;" class="img-thumbnail"/>
+            <script>
+              var loadFile = function (event) {
+                var output = document.getElementById('output');
+                output.style.height = "140px";
+                output.style.width = "140px";
+                output.style.display = "block";
+                output.src = URL.createObjectURL(event.target.files[0]);
+              };
+            </script>
           </div>
           <button type="submit" class="btn btn-success" value="signup">Create</button>
         </form>
       </div>
-      <div class="col-md-4"></div>
+      <div class="col-md-2"></div>
     </div>
   </div>
 </body>
