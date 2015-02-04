@@ -14,7 +14,7 @@ exports.signInUserForm = function(req, res) {
 
 exports.logoutUser = function(req, res) {
   req.session.destroy(function(){
-    res.redirect('/login');
+    res.redirect('/signin');
   });
 };
 
