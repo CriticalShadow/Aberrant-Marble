@@ -43,3 +43,11 @@ body {
   width: 640px;
   height: 480px;
 }
+
+.btn {
+  margin-bottom: 5px;
+}
+
+#photo {
+  height: 25px;
+}
