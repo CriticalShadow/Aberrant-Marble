@@ -32,25 +32,27 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
   $scope.showChatApp = false;
   $scope.msg = '';
   $scope.convo = '';
-  $scope.waiting=false;
+  $scope.waiting = false;
+  $scope.topics = ['How did you spend your last vacation?', 'Describe your hometown', 'What do you do for a living?', 'What kind of food do you like to eat?', 'Describe your family', 'What do you like to do for fun?', 'Describe your mother', 'Describe your perfect day', 'Where would you like to travel?'];
+  $scope.topic = $scope.topics[0];
 
-  $scope.submitLanguages = function(languageSelections){
+  $scope.submitLanguages = function (languageSelections) {
     return $http({
       method: 'GET',
       url: '/api/getroom',
       params: languageSelections
     })
-    .success(function(data){
-      $scope.comm = new Icecomm('IbQqKDNCGQS7b94Mllk/iHOJbeSe/UrJJy6l1BbqEbP0fKaK');
+    .success(function (data){
+      $scope.comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
 
       $scope.comm.connect(data);
 
-      $scope.comm.on('local', function(options) {
+      $scope.comm.on('local', function (options) {
         console.log(options.stream);
         $('#localVideo').attr("src", options.stream);
       });
 
-      $scope.comm.on('connected', function(options) {
+      $scope.comm.on('connected', function (options) {
 
         $scope.waiting = false;
         var foreignVidDiv = $('<div class="inline"></div>');
@@ -58,21 +60,21 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
         foreignVidDiv.children().addClass('foreignVideo');
         $('#videos').prepend(foreignVidDiv);
         // document.getElementById('videos').insertBefore(document.createElement("$BUTTON")options.video, document.getElementById('myVideo'));
-        $scope.$apply(function() { 
+        $scope.$apply(function () { 
           $scope.showChatApp = true; 
         });
       });
 
-      $scope.comm.on('data', function(options) {
-        $scope.$apply(function(){
+      $scope.comm.on('data', function (options) {
+        $scope.$apply(function () {
           Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)
-          .then(function(translatedMsg){
+          .then(function (translatedMsg) {
             console.log(translatedMsg);
             var translatedText = translatedMsg.data.translations[0].translatedText
             $scope.convo += 'Them: ' + options.data + '\n';
             $scope.convo += 'Them (translated): ' + translatedText + '\n';
             $scope.scrollBottom();
-          })
+          });
         });
       })
 
@@ -105,7 +107,13 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
     var chatBox = document.getElementById('chatBox');
     chatBox.scrollTop = chatBox.scrollHeight;
   }
-})
+
+  $scope.changeTopic = function () {
+    //need to add translation for each client
+    $scope.topic = $scope.topics[Math.floor(Math.random() * $scope.topics.length)];
+  }
+
+});
 
 angular.module('translateModule', [])
 
@@ -134,7 +142,6 @@ angular.module('translateModule', [])
       params: {
         key: 'AIzaSyBC5v0BqpuJz6g3roho0JUkwzAX0PoR2Dk',
         target: languageDict[targetLang],
-        // source: languageDict[sourceLang],
         q: msg
       }
     })

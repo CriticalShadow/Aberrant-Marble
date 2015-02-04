@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/client/css/bower.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="/client/js/vendors.js"></script>
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Language Exchange</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+          <li><a href="/logout">Log Out</a><li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="jumbotron">
+    <div class="container">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <form action="/profile" method="post">
+          <h3>Create your profile</h3>
+          <div class="form-group">
+            <label for="firstName">First name</label>
+            <input type="text" class="form-control" id="firstname" placeholder="Enter first name">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name">
+          </div>
+          <div class="form-group">
+            <label for="languages">Rank Language Proficiency</label>
+            <select multiple class="form-control">
+              <option>English</option>
+              <option>Espanol</option>
+              <option>Francais</option>
+              <option>Chinese</option>
+              <option>Deutsch</option>
+              <option>Italia</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success" value="signup">Create</button>
+        </form>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+  </div>
+</body>
+</html>

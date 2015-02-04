@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var crypto = require('crypto');
 var session = require('express-session');
+var path = require('path');
 
 // config file to instantiate 
 var User = require('./server/user/userController');
@@ -96,6 +97,11 @@ app.post('/signin', User.signInUser);
 
 app.get('/logout', User.logoutUser);
 app.post('/logout', User.signInUser);
+
+app.get('/profile', function (req, res) {
+  res.sendFile(path.join(__dirname, '/client/profile.html'));
+});
+// app.post('/profile', User.saveProfile);
 
 
 //Passport facebook auth

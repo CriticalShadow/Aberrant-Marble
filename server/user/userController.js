@@ -2,6 +2,7 @@
 
 var Users = require('../../db/index');
 var bcrypt = require('bcrypt-nodejs');
+var path = require('path');
 // var bodyParser = require('body-parser');
 
 exports.signUpUserForm = function(req, res) {
@@ -46,15 +47,15 @@ exports.signInUser = function(req, res) {
 };
 
 exports.signUpUser = function(req, res) {
-  var username=req.body.username;
-  var password=req.body.password;
+  var username = req.body.username;
+  var password = req.body.password;
 
   Users.findOne({ where : { 
     username: username }
   })
   .then(function(user) {
     if (user) {
-      res.redirect('../../client/signup.html');
+      res.redirect('/profile');
     }
     if (!user) {
       bcrypt.genSalt(10, function(error,result) {
@@ -73,7 +74,7 @@ exports.signUpUser = function(req, res) {
                 console.log('An error occurred while creating the table: user.create', err);
               } else {
                 console.log('User created: ', user.username);
-                res.redirect('./index.html');
+                res.redirect('/profile');
               }
             });
         });
@@ -85,3 +86,7 @@ exports.signUpUser = function(req, res) {
     res.redirect('../../client/signin.html');
   });
 };
+
+exports.createProfile = function (req, res) {
+  res.sendFile(path.join(__dirname , '../../client/profile.html'));
+}
