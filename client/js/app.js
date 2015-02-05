@@ -34,6 +34,8 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
 .controller('selectLanguageController', function ($scope, $http, Translate) {
   $scope.languages = [['English','us'],['Chinese','cn'],['Spanish','es'],['French','fr'],['Italian','it']];
   $scope.language = {};
+  $scope.native = {lang: '', prof: 'Fluent'};
+  $scope.desired = {lang: ''};
 
   $scope.showChatApp = false;
   $scope.msg = '';
@@ -247,24 +249,6 @@ angular.module('translateModule', [])
     photoUrl: 'http://www.musicweb-international.com/film/williams.gif'
   }
 
-  $scope.items = [
-    'The first choice!',
-    'And another choice for you.',
-    'but wait! A third!'
-  ];
-
-  $scope.status = {
-    isopen: false
-  };
-
-  $scope.toggled = function(open) {
-    $log.log('Dropdown is now: ', open);
-  };
-
-  $scope.toggleDropdown = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-    $scope.status.isopen = !$scope.status.isopen;
-  };
+  if ($scope.online)
 
 });
