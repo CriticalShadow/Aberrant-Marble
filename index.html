@@ -12,6 +12,7 @@
     <!-- inject:js -->
   <script src="./client/js/vendors.js"></script>
   <script src="./client/js/app.js"></script>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 
   <!-- endinject -->
 </head>
@@ -21,5 +22,15 @@
 
   <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+  <script>
+      var socket = io();
+      socket.on('connected', function (data) {
+        console.log(data);
+      });
+
+      socket.on('session', function (data) {
+        window.sessionStorage.setItem('session', data);
+      })
+    </script>
 </body>
 </html>

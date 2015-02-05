@@ -2,9 +2,11 @@ var express = require('express');
 // var partials = require('express-partials');
 var bodyParser = require('body-parser');
 var app = express();
+var http = require('http').Server(app);
 var crypto = require('crypto');
 var session = require('express-session');
 var path = require('path');
+var io = require('socket.io')(http);
 
 // config file to instantiate 
 var User = require('./server/user/userController');
@@ -32,9 +34,23 @@ app.use(session({
 }));
 
 
-app.listen(port);
+io.on('connection', function (socket) {
+  socket.emit('connected', 'I am connected');
 
-console.log('Server now listening on port ' + port);
+  socket.emit('session', 123);
+
+  socket.on('signIn', function (data) {
+    console.log(data);
+  });
+
+
+
+
+});
+
+http.listen(port, function () {
+  console.log('Server now listening on port ' + port);
+});
 
 // app.use(partials());
 
@@ -76,19 +92,6 @@ app.get('/api/getroom', function(request, response) {
   }
 });
 
-app.get('/api/position', function(req, res) {
-  var room = req.query.room;
-
-  
-
-  // response.s 
-
-
-  var room = req.query.room;
-  // for(var i = 0;)
-
-});
-
 app.get('/signup', User.signUpUserForm);
 app.post('/signup', User.signUpUser);
 
@@ -112,5 +115,5 @@ app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', '
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
 app.get('/auth/facebook/callback', 
-  passport.authenticate('facebook', { successRedirect: '/',
-                                      failureRedirect: '/login' }));
+  passport.authenticate('facebook', { successRedirect: '/#/dashboard',
+                                      failureRedirect: '/#/signin' }));
