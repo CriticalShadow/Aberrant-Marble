@@ -132,9 +132,10 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
 })
 
 .controller('createProfileController', function ($scope, $http, $location) {
-    $scope.languages = [{lang: 'English'}, {lang: 'Chinese'}, {lang: 'Spanish'}, {lang: 'French'}, {lang: 'Italian'}];
-    $scope.native = {prof: 'Fluent', lang: ''};
-    $scope.desired = {prof: '', lang: ''};
+    $scope.languages = [['English','us'],['Chinese','cn'],['Spanish','es'],['French','fr'],['Italian','it']];
+    $scope.language = {};
+    $scope.native = {lang: '', prof: 'Fluent'};
+    $scope.desired = {lang: ''};
     $scope.lastname = '';
     $scope.firstname = '';
     $scope.levels = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];

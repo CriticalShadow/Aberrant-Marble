@@ -15,7 +15,7 @@ exports.signInUserForm = function(req, res) {
 
 exports.logoutUser = function(req, res) {
   req.session.destroy(function(){
-    res.redirect('/signin');
+    res.redirect('/#/');
   });
 };
 
@@ -32,7 +32,7 @@ exports.signInUser = function(req, res) {
         req.session.regenerate(function(){
           req.session.user = username;
           console.log(req.session.user);
-          res.redirect('/');
+          res.redirect('/#/dashboard');
         });
       } else {
         console.log('wrooooong password or log in!');
