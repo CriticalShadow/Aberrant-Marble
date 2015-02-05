@@ -1,0 +1,75 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Language Exchange</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/">Home</a></li>
+        <li><a href="/logout">Log Out</a><li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="jumbotron">
+  <div class="container">
+    <div class="col-md-3">
+      <h2>Welcome, {{user.firstName}}!</h2>
+      <div class="userimage" style="background: url({{user.photoUrl}}) no-repeat;"></div>
+        <form>
+        <h4 class="languageChange">Change Native Language</h4>
+          <span class="custom-dropdown custom-dropdown--white">
+            <select class="custom-dropdown__select custom-dropdown__select--white" required>
+              <option selected="true" disabled="disabled">Change Native Language</option>
+              <option>English</option>
+              <option>Chinese</option>
+              <option>Spanish</option>
+              <option>French</option>
+              <option>Italian</option>
+            </select>
+          </span>
+          <span class="custom-dropdown custom-dropdown--white">
+            <select class="custom-dropdown__select custom-dropdown__select--white" required>
+              <option selected="true" disabled="disabled">Native Language Confidence Level</option>
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+              <option>Fluent</option>
+            </select>
+          </span>
+        <br>
+        <h4 class="languageChange">Change Desired Language</h4>
+          <span class="custom-dropdown custom-dropdown--white">
+            <select class="custom-dropdown__select custom-dropdown__select--white" required>
+              <option selected="true" disabled="disabled">Change Desired Language</option>
+              <option>English</option>
+              <option>Chinese</option>
+              <option>Spanish</option>
+              <option>French</option>
+              <option>Italian</option>
+            </select>
+          </span>
+          <input type="submit" value="Submit" class="submitDash btn btn-primary">
+        </form>
+      </div>
+      <h2>Your Language Matches</h2>
+      <div class="usermatches col-md-9">
+        <div ng-repeat="user in users" class="col-md-4">
+          <h4 class="matchtext">{{user.firstName}} {{user.lastName}}</h4>
+          <img src="{{user.photoUrl}}" class="matchphotos">
+          <!-- <span class="onlineIndicator">{{online}}</span> -->
+          <br>
+          <button class="btn btn-primary connectButton">
+            Connect
+          </button>
+          <hr>
+      </div>
+    </div>
+  </div>
+</div>
