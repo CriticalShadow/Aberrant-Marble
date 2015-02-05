@@ -1,5 +1,5 @@
 
-angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
+angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.bootstrap'])
 
 .config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
@@ -22,6 +22,11 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router'])
       url: '/profile',
       templateUrl: 'client/profile.html',
       controller: 'createProfileController'
+    })
+    .state('dashboard', {
+      url: '/dashboard',
+      templateUrl: 'client/dashboard.html',
+      controller: 'dashboardController'
     });
 
 })
@@ -193,3 +198,72 @@ angular.module('translateModule', [])
   };
 })
 
+.controller('createProfileController', function ($scope, $http, $location) {
+  $scope.languages = [{lang: 'English', id: 1}, {lang: 'Chinese', id: 2}, {lang: 'Spanish', id: 3}, {lang: 'French', id: 4}, {lang: 'Italian', id: 5}];
+  $scope.native = {};
+  $scope.desired = {};
+  $scope.lastname = '';
+  $scope.firstname = '';
+
+  $scope.saveProfile = function () {
+    var data = {};
+    data.firstName = $scope.firstname;
+    data.lastName = $scope.lastname;
+    data.nativeLangs = $scope.native;
+    data.desiredLangs = $scope.desired;
+    
+    return $http({
+      method: 'POST',
+      url: '/api/profile',
+      data: data
+    }).then(function (res) {
+      $location.url('/');
+    });
+  }
+})
+
+.controller('dashboardController', function ($scope, $http, $location, $log) {
+
+  $scope.online = true;
+
+  $scope.users = [{
+    firstName: 'Gary',
+    lastName: 'Hepburn',
+    photoUrl: 'https://41.media.tumblr.com/tumblr_mdyrwdkunc1rlif9vo1_500.jpg'
+  },{
+    firstName: 'Ron',
+    lastName: 'Arnaldo',
+    photoUrl: 'http://www.somuchviral.com/wp-content/uploads/2014/03/nicolas-cage1.jpg'
+  },{
+    firstName: 'Flo',
+    lastName: 'Chapman',
+    photoUrl: 'client/assets/208238_6580859075_4368_n.jpg'
+  }];
+
+  $scope.user = {
+    firstName: 'John',
+    lastName: 'Williams',
+    photoUrl: 'http://www.musicweb-international.com/film/williams.gif'
+  }
+
+  $scope.items = [
+    'The first choice!',
+    'And another choice for you.',
+    'but wait! A third!'
+  ];
+
+  $scope.status = {
+    isopen: false
+  };
+
+  $scope.toggled = function(open) {
+    $log.log('Dropdown is now: ', open);
+  };
+
+  $scope.toggleDropdown = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    $scope.status.isopen = !$scope.status.isopen;
+  };
+
+});
