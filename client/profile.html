@@ -31,20 +31,24 @@
           <label for="lastName">Last name</label>
           <input type="text" class="form-control" name="lastname" placeholder="Enter last name" ng-model="lastname">
         </div>
-        <div class="form-group desired">
-          <label for="languages">Native Language</label><br>
-              <label class="radio-inline" ng-repeat="lang in languages">
-                <input type="radio" value="" ng-model="native.lang[lang.lang]" name="desired">{{ lang.lang }}
-              </label>
+        <div class="list-group col-md-4 fx-fade-left fx-speed-500 fx-easing-back">
+          <h2> My native language is...  </h2>
+          <a ng-repeat="lang in languages"  href="#/profile" ng-click="language.native=lang[0]; native.lang=lang[0]" class="list-group-item">
+            <span class="flag-icon flag-icon-{{ lang[1] }}"></span>
+              {{ lang[0] }}
+            <span class="glyphicon glyphicon-menu-right right" aria-hidden="true"></span>
+          </a>
         </div>
-        <div class="form-group desired">
-          <label for="languages">Desired Language</label><br>
-              <label class="radio-inline" ng-repeat="lang in languages">
-                <input type="radio" value="" ng-model="desired.lang[lang.lang]" name="desired">{{ lang.lang }}
-              </label>
+        <div ng-if="language.native" class="list-group col-md-4 fx-fade-left fx-speed-500 fx-easing-back">
+            <h2> I want to practice...  </h2>
+            <a ng-repeat="lang in languages"  href="#/profile" ng-click="language.desired=lang[0]; desired.lang=lang[0]" class="list-group-item">
+            <span class="flag-icon flag-icon-{{ lang[1] }}"></span>
+              {{ lang[0] }}
+            <span class="glyphicon glyphicon-menu-right right" aria-hidden="true"></span>
+          </a>
         </div>
         <div class="form-group proficiency">
-          <select class="form-control" ng-model="desired.prof[level]" ng-options="level for level in levels">
+          <select class="form-control" ng-model="desired.prof" ng-options="level for level in levels">
             <option value="">Proficiency Level</option>
           </select>
         </div>
