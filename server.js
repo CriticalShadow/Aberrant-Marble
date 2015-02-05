@@ -1,5 +1,6 @@
 var express = require('express');
 // var partials = require('express-partials');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var app = express();
 var http = require('http').Server(app);
@@ -22,7 +23,7 @@ var host = process.env.host || '127.0.0.1';
 
 
 app.use(express.static(__dirname));
-// app.use(express.cookieParser('shhhh, very secret'));
+app.use(cookieParser('shhhh, very secret'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(passport.initialize());

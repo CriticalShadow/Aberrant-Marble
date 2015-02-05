@@ -10,6 +10,7 @@ exports.signUpUserForm = function(req, res) {
 };
 
 exports.signInUserForm = function(req, res) {
+  res.cookie('u_id', user.id);
   res.redirect('../../client/signin.html');
 };
 
