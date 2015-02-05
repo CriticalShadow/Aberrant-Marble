@@ -1,5 +1,4 @@
 var express = require('express'); 
-// var partials = require('express-partials');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var app = express();
@@ -20,7 +19,6 @@ var passport = require('./server/facebookSignin.js');
 var port = process.env.PORT || 3000;
 var host = process.env.host || '127.0.0.1';
 
-
 app.use(express.static(__dirname));
 app.use(cookieParser('shhhh, very secret'));
 app.use(bodyParser.json());
@@ -30,11 +28,34 @@ app.use(passport.session());
 app.use(session({
   secret: 'secret',
   resave: false,
+  key: 'event.sid',
   saveUninitialized: true
 }));
 
 
+var users = {}; // server session store
+var clients = {}; // socket session store
+var MemoryStore = session.MemoryStore;
+var sessionStore = new MemoryStore();
+
 io.on('connection', function (socket) {
+  var session_id; //declare var in outer scope so disconnect function has access to this variable
+  var socket_id; //same as above
+
+  //Creates the key-value pair for session ID and socket ID
+  cookieParser('secret')(socket.handshake, null, function () { 
+    session_id = socket.handshake.signedCookies['event.sid'] || socket.handshake.signedCookies['connect.sid'];
+    socket_id = socket.id;
+    sessionStore[session_id] = socket_id;
+    console.log(sessionStore);
+  });
+
+  //Destroy the session-socket key-value pair in our sessionStorage table
+  socket.on('disconnect', function () {
+    delete sessionStore[session_id];
+    console.log(sessionStore);
+  });
+
   socket.emit('connected', 'I am connected');
 
   socket.emit('session', 123);
@@ -42,22 +63,16 @@ io.on('connection', function (socket) {
   socket.on('signIn', function (data) {
     console.log(data);
   });
-
-
-
-
+  
 });
+
 
 http.listen(port, function () {
   console.log('Server now listening on port ' + port);
 });
 
-// app.use(partials());
-
-
 app.set('views', __dirname);
 
-module.exports = app;
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname, '/index.html'); //home page
@@ -92,10 +107,8 @@ app.get('/api/getroom', function(request, response) {
   }
 });
 
-app.get('/signup', User.signUpUserForm);
 app.post('/signup', User.signUpUser);
 
-app.get('/signin', User.signInUserForm);
 app.post('/signin', User.signInUser);
 
 app.get('/logout', User.logoutUser);
@@ -127,3 +140,5 @@ app.get('/auth/facebook/callback',
       res.redirect('/#/signin');
     });
 });
+
+module.exports = app;
