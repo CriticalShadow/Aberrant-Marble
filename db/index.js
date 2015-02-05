@@ -5,20 +5,21 @@ var Sequelize = require('sequelize');
 var host = 'localhost';
 var port = 3306;
 
+var db = {};
 
 //dev vs prod credentials
 if (process.env.languageappdb) {
-  var sequelize = new Sequelize('languageapp', 'aberrantmarble', 'hr23greenfield', {
+  db.sequelize = new Sequelize('languageapp', 'aberrantmarble', 'hr23greenfield', {
     host: process.env.languageappdb,
     port: process.env.languageappdbport,
     dialect: 'mysql'
   });  
-} else { var sequelize = new Sequelize('languageapp', 'root', '', {
+} else { db.sequelize = new Sequelize('languageapp', 'root', '', {
   dialect: 'mysql'
 });
 }
 
-sequelize
+db.sequelize
   .authenticate()
   .complete(function(err) {
     if (!!err) {
@@ -28,18 +29,45 @@ sequelize
     }
   });
 
-var User = sequelize.define('User', {
+db.User = db.sequelize.define('User', {
   username: Sequelize.STRING,
   facebookId: Sequelize.STRING,   // string bc facebookIds are larger than largest integer value allowed (2147483647 will be used for all FB ids otherwise)
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
   password: Sequelize.STRING,
   salt: Sequelize.STRING,
-  desired: Sequelize.STRING,
-  native: Sequelize.STRING
+  desireLang: Sequelize.STRING,
+  native: Sequelize.STRING,
+  nativeRating: Sequelize.INTEGER
 });
 
-User
+// db.Language = db.sequelize.define('Language', {
+//   languages: Sequelize.STRING,
+// });
+// // pre-populate languages table
+// db.Language
+//   .create({
+//     languages: 'English'
+//   })
+// db.Language
+//   .create({
+//     languages: 'Chinese'
+//   })
+// db.Language
+//   .create({
+//     languages: 'Spanish'
+//   })
+// db.Language
+//   .create({
+//     languages: 'French'
+//   })
+// db.Language
+//   .create({
+//     languages: 'Italian'
+//   })
+
+
+db.sequelize
   .sync()
   .complete(function(err) {
     if (!!err) {
@@ -48,6 +76,7 @@ User
       console.log('Table created!');
       }
     });
+
 
 // User
 //   .create({
@@ -66,4 +95,4 @@ User
 //     }
 //   });
 
-module.exports = User;
+module.exports = db.User;
