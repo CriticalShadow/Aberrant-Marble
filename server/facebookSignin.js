@@ -36,7 +36,10 @@ passport.use(new FacebookStrategy({
           });
           done(null, profile);
         }
-      });
+      })
+      // .then(function(user){
+      //   console.log("testing"+user);
+      // });
     });
   }
 ));

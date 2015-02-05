@@ -35,7 +35,7 @@ db.User = db.sequelize.define('User', {
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
   password: Sequelize.STRING,
-  salt: Sequelize.STRING,
+  // salt: Sequelize.STRING,
   desireLang: Sequelize.STRING,
   native: Sequelize.STRING,
   nativeRating: Sequelize.INTEGER

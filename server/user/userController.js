@@ -3,6 +3,7 @@
 var Users = require('../../db/index');
 var bcrypt = require('bcrypt-nodejs');
 var path = require('path');
+var Promise = require('bluebird');
 // var bodyParser = require('body-parser');
 
 exports.signUpUserForm = function(req, res) {
@@ -10,12 +11,12 @@ exports.signUpUserForm = function(req, res) {
 };
 
 exports.signInUserForm = function(req, res) {
-  res.cookie('u_id', user.id);
   res.redirect('../../client/signin.html');
 };
 
 exports.logoutUser = function(req, res) {
   req.session.destroy(function(){
+    res.clearCookie('u_id');
     res.redirect('/#/');
   });
 };
@@ -28,22 +29,24 @@ exports.signInUser = function(req, res) {
     { username: username }
   })
   .then(function(user){
-    bcrypt.compare(password, user.password, function(err, result) {
-      if (result) {
-        req.session.regenerate(function(){
-          req.session.user = username;
-          console.log(req.session);
-          res.redirect('/#/dashboard');
-        });
+    // bcrypt.compare(password, user.password, function(err, result) {
+    //   if (result) {
+    //     req.session.regenerate(function(){
+    //       req.session.user = username;
+    //       console.log(req.session);
+    //       res.redirect('/#/dashboard');
+    //     });
+      if (user.password === password) {
+        res.cookie('u_id', user.id);
+        res.redirect('/#/dashboard');
       } else {
         console.log('wrooooong password or log in!');
-        res.redirect('../../client/signin.html');
+        res.redirect('/#/signin');
       }
-    });
   })
   .catch(function(err) {
     console.log('user doesnt exist');
-    res.redirect('../../client/signin.html');
+    res.redirect('/#/');
   });
 };
 
@@ -56,15 +59,13 @@ exports.signUpUser = function(req, res) {
   })
   .then(function(user) {
     if (user) {
+      res.cookie('u_id', user.id);
       res.redirect('/#/profile');
     }
     if (!user) {
-      bcrypt.genSalt(10, function(error,result) {
-        bcrypt.hash(password, result, null, function(err, hash) {
           Users.create({
               username: username,
-              salt: result,
-              password: hash
+              password: password
               // firstname: req.body.firstname, //add later?
               // lastname: req.body.lastname, //add later?
               // native: req.body.native, //add later?
@@ -75,11 +76,12 @@ exports.signUpUser = function(req, res) {
                 console.log('An error occurred while creating the table: user.create', err);
               } else {
                 console.log('User created: ', user.username);
+                res.cookie('u_id', user.id);
+                console.log('got here');
                 res.redirect('/#/profile');
               }
             });
-        });
-      });
+
     }
   })
   .catch(function(err) {
@@ -96,3 +98,36 @@ exports.saveProfile = function (req, res) {
   console.log(req.body);
   res.sendStatus('/#/dashboard');
 }
+
+exports.setUser = function (username) {
+  return new Promise(function (resolve, reject) {
+    var name = username;
+    // check to see whether or not the user exists already
+    Users
+    .find({ where: {
+      username: name}
+    })
+    .complete(function (err, user) {
+      if (err) {
+        console.log(err);
+        return err;
+      } else if (user === null) { 
+        // if the user is not found in the db, then we create the user
+        Users.create({
+          username: name
+        })
+        .complete(function (err, user) {
+          if (err) { 
+            console.log(err)
+          } else {
+            // send the user info back to the server
+            resolve(user);
+          }
+        });  
+      } else { 
+        // send the user info back to the server
+        resolve(user);
+      }
+    });
+  });
+};

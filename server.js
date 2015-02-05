@@ -8,8 +8,7 @@ var crypto = require('crypto');
 var session = require('express-session');
 var path = require('path');
 var io = require('socket.io')(http);
-
-// config file to instantiate 
+var Promise = require('bluebird');
 var User = require('./server/user/userController');
 var Users = require('./db/index');
 // config file to instantiate all queues
@@ -116,5 +115,15 @@ app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', '
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
 app.get('/auth/facebook/callback', 
-  passport.authenticate('facebook', { successRedirect: '/#/dashboard',
-                                      failureRedirect: '/#/signin' }));
+  passport.authenticate('facebook', { failureRedirect: '/#/login'}), function (req, res) {
+  User.setUser(req.user.displayName)
+    .then(function (user) {
+      res.cookie('u_id', user.id); 
+    })
+    .then(function () {
+      res.redirect('/#/dashboard'); //redirect them to their dashboard
+    })
+    .catch(function () {
+      res.redirect('/#/signin');
+    });
+});
