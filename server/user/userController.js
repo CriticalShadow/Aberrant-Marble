@@ -31,7 +31,7 @@ exports.signInUser = function(req, res) {
       if (result) {
         req.session.regenerate(function(){
           req.session.user = username;
-          console.log(req.session.user);
+          console.log(req.session);
           res.redirect('/#/dashboard');
         });
       } else {

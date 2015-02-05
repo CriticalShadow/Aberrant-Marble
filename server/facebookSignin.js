@@ -13,7 +13,7 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-//move clientID and secret as to not expose credentials
+//TODO: REFACTOR OUT THE USER MODEL CREATION TO BE HANDLED IN SERVER.JS SO APPROPRIATE REDIRECT CAN HAPPEN FOR NEW VS. OLD USERS
 passport.use(new FacebookStrategy({
     clientID: 1006036516092054,
     clientSecret: '6cffbe530d47734d27c2be8754f3481e',
