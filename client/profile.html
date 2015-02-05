@@ -1,4 +1,4 @@
-s<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -21,48 +21,32 @@ s<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-      <!-- <form action="/profile" method="post"> -->
       <form>
         <h3>Create your profile</h3>
         <div class="form-group">
           <label for="firstName">First name</label>
-          <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name" ng-model="firstname">
+          <input type="text" class="form-control" name="firstname" placeholder="Enter first name" ng-model="firstname">
         </div>
         <div class="form-group">
           <label for="lastName">Last name</label>
-          <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name" ng-model="lastname">
-        </div>
-        <div class="form-group native">
-          <label for="languages">Native Language Proficiency</label>
-            <div class="checkbox" ng-repeat="lang in languages">
-              <label>
-                <input type="checkbox" value="" ng-model="native[lang.lang]">
-                {{ lang.lang }}
-              </label>
-            </div>
+          <input type="text" class="form-control" name="lastname" placeholder="Enter last name" ng-model="lastname">
         </div>
         <div class="form-group desired">
-          <label for="languages">Desired Language Proficiency</label>
-            <div class="checkbox" ng-repeat="lang in languages">
-              <label>
-                <input type="checkbox" value="" ng-model="desired[lang.lang]">
-                {{ lang.lang }}
+          <label for="languages">Native Language</label><br>
+              <label class="radio-inline" ng-repeat="lang in languages">
+                <input type="radio" value="" ng-model="native.lang[lang.lang]" name="desired">{{ lang.lang }}
               </label>
-            </div>
         </div>
-        <div class="form-group">
-          <label for="exampleInputFile">Upload a photo</label>
-          <input type="file" accept="image/*" onchange="loadFile(event)" id="photo" name="photo">
-          <img id="output" style="display: none; margin-top: 5px;" class="img-thumbnail"/>
-          <script>
-            var loadFile = function (event) {
-              var output = document.getElementById('output');
-              output.style.height = "140px";
-              output.style.width = "140px";
-              output.style.display = "block";
-              output.src = URL.createObjectURL(event.target.files[0]);
-            };
-          </script>
+        <div class="form-group desired">
+          <label for="languages">Desired Language</label><br>
+              <label class="radio-inline" ng-repeat="lang in languages">
+                <input type="radio" value="" ng-model="desired.lang[lang.lang]" name="desired">{{ lang.lang }}
+              </label>
+        </div>
+        <div class="form-group proficiency">
+          <select class="form-control" ng-model="desired.prof[level]" ng-options="level for level in levels">
+            <option value="">Proficiency Level</option>
+          </select>
         </div>
         <button ng-click="saveProfile()" class="btn btn-success" value="signup">Create</button>
       </form>

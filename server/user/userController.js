@@ -93,5 +93,5 @@ exports.createProfile = function (req, res) {
 
 exports.saveProfile = function (req, res) {
   console.log(req.body);
-  res.sendStatus(201);
+  res.sendStatus('/#/dashboard');
 }
