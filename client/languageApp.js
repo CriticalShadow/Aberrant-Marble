@@ -118,7 +118,8 @@ angular.module('languageApp', ['translateModule', 'ngFx'])
       url: '/api/profile',
       data: data
     }).then(function (res) {
-      $location.url('/');
+      console.log(data);
+      $location.url('/#/dashboard');
     });
   }
 

@@ -38,7 +38,7 @@ db.User = db.sequelize.define('User', {
   // salt: Sequelize.STRING,
   desireLang: Sequelize.STRING,
   native: Sequelize.STRING,
-  nativeRating: Sequelize.INTEGER
+  nativeRating: Sequelize.STRING
 });
 
 // db.Language = db.sequelize.define('Language', {
