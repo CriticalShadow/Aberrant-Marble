@@ -9,8 +9,8 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 // var bodyParser = require('body-parser');
 
-exports.logoutUser = function(req, res) {
-  req.session.destroy(function(){
+exports.logoutUser = function (req, res) {
+  req.session.destroy(function (){
     res.clearCookie('u_id');
     res.redirect('/#/');
   });
@@ -18,7 +18,7 @@ exports.logoutUser = function(req, res) {
 
 exports.userTable = {};
 
-exports.signInUser = function(req, res) {
+exports.signInUser = function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
 
@@ -28,7 +28,7 @@ exports.signInUser = function(req, res) {
   Users.find({ where: 
     { username: username }
   })
-  .complete(function (err, user){
+  .complete(function (err, user) {
     if (err) {
       console.log('error searching the db', err);
       return;
@@ -45,7 +45,8 @@ exports.signInUser = function(req, res) {
         console.log('wrooooong password or log in!');
         res.redirect('/#/signin');
       }
-  })
+    });
+  });
 };
 
 exports.signUpUser = function (req, res) {
@@ -61,8 +62,8 @@ exports.signUpUser = function (req, res) {
       res.redirect('/#/signin');
     }
     if (!user) {
-      bcrypt.genSalt(10, function(error,result) {
-        bcrypt.hash(password, result, null, function(err, hash) {
+      bcrypt.genSalt(10, function (error,result) {
+        bcrypt.hash(password, result, null, function (err, hash) {
           Users.create({
               username: username,
               salt: result,
@@ -72,7 +73,7 @@ exports.signUpUser = function (req, res) {
               // native: req.body.native, //add later?
               // desired: req.body.desired //add later?
             })
-            .complete(function(err, user) {
+            .complete(function (err, user) {
               if (!!err) {
                 console.log('An error occurred while creating the table: user.create', err);
               } else {
@@ -112,7 +113,7 @@ exports.saveProfile = function (req, res) {
       console.log('could not find user with this ID');
     }
   })
-  .complete(function(err, user) {
+  .complete(function (err, user) {
     if (!!err) {
       console.log('An error occurred while creating the table: user.create', err);
     } else {
