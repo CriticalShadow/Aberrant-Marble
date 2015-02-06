@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var http = require('http').Server(app);
 var crypto = require('crypto');
+var Guid = require('node-uuid');
 var session = require('express-session');
 var path = require('path');
 var io = require('socket.io')(http);
@@ -27,8 +28,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(session({
   secret: 'secret',
-  resave: true,
+  resave: false,
   key: 'event.sid',
+  name: 'event.sid',
   saveUninitialized: false
 }));
 
@@ -45,7 +47,8 @@ io.on('connection', function (socket) {
 
   //Creates the key-value pair for session ID and socket ID
   cookieParser('secret')(socket.handshake, null, function () { 
-    session_id = socket.handshake.signedCookies['event.sid'] || socket.handshake.signedCookies['connect.sid'];
+    console.log(socket.handshake);
+    session_id = socket.handshake.signedCookies['event.sid'] || Guid.v4();;
     socket_id = socket.id;
     app.sessionStore[session_id] = socket_id;
     console.log('app.sessionStore', app.sessionStore);
