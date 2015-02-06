@@ -45,8 +45,6 @@ io.on('connection', function (socket) {
 
   //Creates the key-value pair for session ID and socket ID
   cookieParser('secret')(socket.handshake, null, function () { 
-    // console.log('socket signedCookies', socket.handshake.signedCookies);
-    console.log('socket handshake', socket.handshake);
     session_id = socket.handshake.signedCookies['event.sid'] || socket.handshake.signedCookies['connect.sid'];
     socket_id = socket.id;
     app.sessionStore[session_id] = socket_id;
@@ -63,14 +61,22 @@ io.on('connection', function (socket) {
   socket.emit('connected', 'I am connected');
 
   socket.on('connectionreq', function (data) {
-    console.log('got to connection req', data);
-    var socketId = app.sessionStore[User.userTable[data]];
-    console.log('socketId', socketId);
     console.log("user table", User.userTable);
+    var socketId = app.sessionStore[User.userTable[data.u_id]];
+    var mySocket = app.sessionStore[User.userTable[data.my_id]];
     console.log('app.sessionStore', app.sessionStore);
 
     var newRoom = crypto.pseudoRandomBytes(256).toString('base64');
-    socket.to(socketId).emit('connecting', newRoom);
+    var contents = {
+      room: newRoom,
+      u_id: data.u_id,
+      my_id: mySocket
+    };
+    socket.to(socketId).emit('connecting', contents);
+  });
+
+  socket.on('roomRequest', function (data) {
+    socket.to(data.my_id).emit('joinRoom', data.room);
   });
   
 });
@@ -109,7 +115,7 @@ app.get('/api/getroom', function(request, response) {
   } else {
     console.log('new room');
     var newRoom = crypto.pseudoRandomBytes(256).toString('base64');
-    console.log(typeof newRoom);
+    console.log(newRoom);
     queues[Queue.stringify(nativeLanguage,desiredLanguage)].push(newRoom);
     response.status(200).send(newRoom);
   }
