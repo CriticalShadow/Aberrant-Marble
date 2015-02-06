@@ -37,6 +37,7 @@
 
       socket.on('session', function (data) {
         window.sessionStorage.setItem('event.sid', data);
+        document.cookie = 'event.sid=s%3A' + data;
       });
       
       socket.on('joinRoom', function (data) {
