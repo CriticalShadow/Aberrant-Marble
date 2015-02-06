@@ -32,11 +32,12 @@ exports.signInUser = function (req, res) {
       console.log('error searching the db', err);
       return;
     }
-    bcrypt.compare(password, user.password, function(err, result) {
+    bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
           res.cookie('u_id', user.id);
           var parsedCookie = req.headers.cookie ? req.headers.cookie.split('event.sid=s%3A')[1].split('.')[0] : null;
           exports.userTable[user.id] = parsedCookie;
+          console.log(exports.userTable);
           res.redirect('/#/dashboard');
       } else {
         console.log('wrooooong password or log in!');
