@@ -45,7 +45,12 @@ exports.signInUser = function (req, res) {
         console.log('wrooooong password or log in!');
         res.redirect('/#/signin');
       }
+
     });
+  })
+  .catch(function(err) {
+    console.log('user doesnt exist');
+    res.redirect('/#/');
   });
 };
 
@@ -154,3 +159,17 @@ exports.setUser = function (username) {
     });
   });
 };
+
+exports.setNative = function (lang) {
+
+};
+
+exports.setNativeRating = function (rating) {
+
+};
+
+exports.setDesired = function (lang) {
+
+};
+
+
