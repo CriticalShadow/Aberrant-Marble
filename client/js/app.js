@@ -232,15 +232,18 @@ angular.module('translateModule', [])
   $scope.users = [{
     firstName: 'Gary',
     lastName: 'Hepburn',
-    photoUrl: 'https://41.media.tumblr.com/tumblr_mdyrwdkunc1rlif9vo1_500.jpg'
+    photoUrl: 'https://41.media.tumblr.com/tumblr_mdyrwdkunc1rlif9vo1_500.jpg',
+    id: 1
   },{
     firstName: 'Ron',
     lastName: 'Arnaldo',
-    photoUrl: 'http://www.somuchviral.com/wp-content/uploads/2014/03/nicolas-cage1.jpg'
+    photoUrl: 'http://www.somuchviral.com/wp-content/uploads/2014/03/nicolas-cage1.jpg',
+    id: 2
   },{
     firstName: 'Flo',
     lastName: 'Chapman',
-    photoUrl: 'client/assets/208238_6580859075_4368_n.jpg'
+    photoUrl: 'client/assets/208238_6580859075_4368_n.jpg',
+    id: 3
   }];
 
   $scope.user = {
@@ -249,6 +252,27 @@ angular.module('translateModule', [])
     photoUrl: 'http://www.musicweb-international.com/film/williams.gif'
   }
 
-  if ($scope.online)
+  $scope.connect = function(userId) {
+    console.log('user id', userId);
+    var socket = io();
+    socket.emit('connectionreq', userId);
+  }
+
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
