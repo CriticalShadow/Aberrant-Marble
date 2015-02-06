@@ -73,16 +73,15 @@ exports.signUpUser = function (req, res) {
               username: username,
               salt: result,
               password: hash
-              // firstname: req.body.firstname, //add later?
-              // lastname: req.body.lastname, //add later?
-              // native: req.body.native, //add later?
-              // desired: req.body.desired //add later?
             })
             .complete(function (err, user) {
               if (!!err) {
                 console.log('An error occurred while creating the table: user.create', err);
               } else {
                 res.cookie('u_id', user.id);
+                var parsedCookie = req.headers.cookie ? req.headers.cookie.split('event.sid=s%3A')[1].split('.')[0] : null;
+                exports.userTable[user.id] = parsedCookie;
+                res.cookie('connection.id', parsedCookie);
                 res.redirect('/#/profile');
               }
             });
