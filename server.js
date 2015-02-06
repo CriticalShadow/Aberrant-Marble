@@ -36,7 +36,8 @@ app.use(session({
 var users = {}; // server session store
 var clients = {}; // socket session store
 var MemoryStore = session.MemoryStore;
-var sessionStore = new MemoryStore();
+
+app.sessionStore = new MemoryStore();
 
 io.on('connection', function (socket) {
   var session_id; //declare var in outer scope so disconnect function has access to this variable
@@ -44,28 +45,33 @@ io.on('connection', function (socket) {
 
   //Creates the key-value pair for session ID and socket ID
   cookieParser('secret')(socket.handshake, null, function () { 
+    // console.log('socket signedCookies', socket.handshake.signedCookies);
+    console.log('socket handshake', socket.handshake);
     session_id = socket.handshake.signedCookies['event.sid'] || socket.handshake.signedCookies['connect.sid'];
     socket_id = socket.id;
-    sessionStore[session_id] = socket_id;
-    console.log(sessionStore);
+    app.sessionStore[session_id] = socket_id;
+    console.log('app.sessionStore', app.sessionStore);
+    socket.emit('session', session_id);
   });
 
   //Destroy the session-socket key-value pair in our sessionStorage table
   socket.on('disconnect', function () {
-    delete sessionStore[session_id];
-    console.log(sessionStore);
+    delete app.sessionStore[session_id];
+    console.log(app.sessionStore);
   });
 
   socket.emit('connected', 'I am connected');
 
-  socket.emit('session', 123);
+  socket.on('connectionreq', function (data) {
+    console.log('got to connection req', data);
+    var socketId = app.sessionStore[User.userTable[data]];
+    console.log('socketId', socketId);
+    console.log('app.sessionStore', app.sessionStore);
 
-  socket.on('signIn', function (data) {
-    console.log(data);
+    socket.to(socketId).emit('connecting', 'Hello!');
   });
   
 });
-
 
 http.listen(port, function () {
   console.log('Server now listening on port ' + port);

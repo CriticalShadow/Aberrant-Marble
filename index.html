@@ -24,13 +24,21 @@
   <script src="/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
   <script>
       var socket = io();
+
       socket.on('connected', function (data) {
         console.log(data);
       });
 
       socket.on('session', function (data) {
-        window.sessionStorage.setItem('session', data);
-      })
+        window.sessionStorage.setItem('event.sid', data);
+      });
+
+      socket.on('connecting', function (data) {
+        console.log(data);
+      });
+
     </script>
 </body>
 </html>
+
+<!-- how to get a user's socket id when we click on their profile. -->

@@ -34,6 +34,8 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
 .controller('selectLanguageController', function ($scope, $http, Translate) {
   $scope.languages = [['English','us'],['Chinese','cn'],['Spanish','es'],['French','fr'],['Italian','it']];
   $scope.language = {};
+  $scope.native = {lang: '', prof: 'Fluent'};
+  $scope.desired = {lang: ''};
 
   $scope.showChatApp = false;
   $scope.msg = '';
@@ -230,15 +232,18 @@ angular.module('translateModule', [])
   $scope.users = [{
     firstName: 'Gary',
     lastName: 'Hepburn',
-    photoUrl: 'https://41.media.tumblr.com/tumblr_mdyrwdkunc1rlif9vo1_500.jpg'
+    photoUrl: 'https://41.media.tumblr.com/tumblr_mdyrwdkunc1rlif9vo1_500.jpg',
+    id: 1
   },{
     firstName: 'Ron',
     lastName: 'Arnaldo',
-    photoUrl: 'http://www.somuchviral.com/wp-content/uploads/2014/03/nicolas-cage1.jpg'
+    photoUrl: 'http://www.somuchviral.com/wp-content/uploads/2014/03/nicolas-cage1.jpg',
+    id: 2
   },{
     firstName: 'Flo',
     lastName: 'Chapman',
-    photoUrl: 'client/assets/208238_6580859075_4368_n.jpg'
+    photoUrl: 'client/assets/208238_6580859075_4368_n.jpg',
+    id: 3
   }];
 
   $scope.user = {
@@ -247,24 +252,27 @@ angular.module('translateModule', [])
     photoUrl: 'http://www.musicweb-international.com/film/williams.gif'
   }
 
-  $scope.items = [
-    'The first choice!',
-    'And another choice for you.',
-    'but wait! A third!'
-  ];
+  $scope.connect = function(userId) {
+    console.log('user id', userId);
+    var socket = io();
+    socket.emit('connectionreq', userId);
+  }
 
-  $scope.status = {
-    isopen: false
-  };
-
-  $scope.toggled = function(open) {
-    $log.log('Dropdown is now: ', open);
-  };
-
-  $scope.toggleDropdown = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-    $scope.status.isopen = !$scope.status.isopen;
-  };
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

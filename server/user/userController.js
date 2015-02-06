@@ -4,6 +4,9 @@ var Users = require('../../db/index');
 var bcrypt = require('bcrypt-nodejs');
 var path = require('path');
 var Promise = require('bluebird');
+var app = require('../../server.js');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 // var bodyParser = require('body-parser');
 
 exports.logoutUser = function(req, res) {
@@ -13,19 +16,29 @@ exports.logoutUser = function(req, res) {
   });
 };
 
+exports.userTable = {};
+
 exports.signInUser = function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
 
-  Users.findOne({ where: 
+  console.log(req.headers.cookie);
+  var parsedCookie = req.headers.cookie ? req.headers.cookie.split('event.sid=s%3A')[1].split('.')[0] : null;
+
+  Users.find({ where: 
     { username: username }
   })
-  .then(function(user){
+  .complete(function (err, user){
+    if (err) {
+      console.log('error searching the db', err);
+      return;
+    }
     bcrypt.compare(password, user.password, function(err, result) {
       if (result) {
         req.session.regenerate(function(){
           req.session.user = username;
           res.cookie('u_id', user.id);
+          exports.userTable[user.id] = parsedCookie;
           res.redirect('/#/dashboard');
         });
       } else {
@@ -33,16 +46,12 @@ exports.signInUser = function(req, res) {
         res.redirect('/#/signin');
       }
   })
-  .catch(function(err) {
-    console.log('user doesnt exist');
-    res.redirect('/#/');
-  });
-});
 };
 
 exports.signUpUser = function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
+
 
   Users.findOne({ where : { 
     username: username }
