@@ -31,7 +31,7 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
 
 })
 
-.controller('selectLanguageController', function ($scope, $http, Translate) {
+.controller('selectLanguageController', function ($scope, $http, Translate, $window) {
   $scope.languages = [['English','us'],['Chinese','cn'],['Spanish','es'],['French','fr'],['Italian','it']];
   $scope.language = {};
   $scope.native = {lang: '', prof: 'Fluent'};
@@ -44,44 +44,60 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
   $scope.topics = ['How did you spend your last vacation?', 'Describe your hometown', 'What do you do for a living?', 'What kind of food do you like to eat?', 'Describe your family', 'What do you like to do for fun?', 'Describe your mother', 'Describe your perfect day', 'Where would you like to travel?'];
   $scope.topic = $scope.topics[0];
 
-  $scope.submitLanguages = function (languageSelections) {
-    return $http({
-      method: 'GET',
-      url: '/api/getroom',
-      params: languageSelections
-    })
-    .success(function (data) {
-      $scope.comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
+  // $scope.submitLanguages = function (languageSelections) {
+    // return $http({
+    //   method: 'GET',
+    //   url: '/api/getroom',
+    //   params: languageSelections
+    // })
+    // .success(function (data) {
+      // $scope.comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
 
-      $scope.comm.connect(data);
+      $scope.comm = $window.comm;
+      $scope.roomId = $window.roomId;
 
-      // Show video of the user
-      $scope.comm.on('local', function (options) {
-        console.log(options.stream);
-        $('#localVideo').attr("src", options.stream);
-      });
+      $scope.myId = $window.myId;
 
-      // When two people are connected, display the video of the language partner
-      // and show the chat app
-      $scope.comm.on('connected', function (options) {
-        var foreignVidDiv = $('<div class="inline"></div>');
-        foreignVidDiv.append(options.video)
-        foreignVidDiv.children().addClass('foreignVideo');
-        $('#videos').prepend(foreignVidDiv);
-        // document.getElementById('videos').insertBefore(document.createElement("$BUTTON")options.video, document.getElementById('myVideo'));
-        $scope.$apply(function () { 
-          $scope.showChatApp = true; 
-        });
-      });
+      $scope.$watch($scope.comm, function() {
+         $scope.comm = $window.comm;
+         console.log('$scope.comm', $scope.comm);
+       });
+
+      if ($scope.comm && $scope.roomId) {
+        $scope.comm.connect($scope.roomId);
+      }
+
+
+      // // Show video of the user
+      // $scope.comm.on('local', function (options) {
+      //   console.log(options.stream);
+      //   $('#localVideo').attr("src", options.stream);
+      // });
+
+      // // When two people are connected, display the video of the language partner
+      // // and show the chat app
+      // $scope.comm.on('connected', function (options) {
+      //   var foreignVidDiv = $('<div class="inline"></div>');
+      //   foreignVidDiv.append(options.video)
+      //   foreignVidDiv.children().addClass('foreignVideo');
+      //   $('#videos').prepend(foreignVidDiv);
+      //   // document.getElementById('videos').insertBefore(document.createElement("$BUTTON")options.video, document.getElementById('myVideo'));
+      //   $scope.$apply(function () { 
+      //     $scope.showChatApp = true; 
+      //   });
+      // });
 
       // When a chat message is received from the language partner,
       // translate the message using Google Translate and
       // display both the original message and the translated message
       $scope.comm.on('data', function (options) {
+        console.log('sent data aka a message');
+        // $scope.convo += 'Them: ' + options.data + '\n';
         $scope.$apply(function(){
-          Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)
+          console.log('got to apply');
+          Translate.translateMsg(options.data, 'English', 'Spanish')//$scope.language.native, $scope.language.desired)
           .then(function (translatedMsg) {
-            console.log(translatedMsg);
+            console.log('translatedMsg', translatedMsg);
             var translatedText = translatedMsg.data.translations[0].translatedText
             $scope.convo += 'Them: ' + options.data + '\n';
             $scope.convo += 'Them (translated): ' + translatedText + '\n';
@@ -97,8 +113,10 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
           $scope.showChatApp = false;
         });
       });
-    })
-  }
+  //   })
+  // }
+
+
 
   // Function to send a message to the language partner
   // and display the sent message in the chatbox
