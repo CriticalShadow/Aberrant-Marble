@@ -342,24 +342,41 @@ angular.module('translateModule', [])
   };
 
   $scope.updateNativeLang = function(value) {
-    console.log('Native: '+value);
+    $http.post('/api/updateNative', { msg: value }).
+      success(function(data, status, headers, config){
+        console.log('successful posting!');
+      }).error(function(data, status, headers, config){
+        console.log('error posting!!');
+      })
+  };
+
+  $scope.updateNativeLangRating = function(value) {
+    console.log(value);
+    $http.post('/api/updateNativeRating', { msg: value }).
+      success(function(data, status, headers, config){
+        console.log('successful posting!');
+      }).error(function(data, status, headers, config){
+        console.log('error posting!!');
+      })
     };
 
   $scope.updateDesiredLang = function(value) {
-    console.log('Desired: '+value);
-    };
-
-  $scope.updateDesiredLangRating = function(value) {
-    console.log('Desired-Rating: '+value);
+    $http.post('/api/updateDesired', { msg: value }).
+      success(function(data, status, headers, config){
+        console.log('successful posting!, fetching results');
+        $http.get('/api/updateDesired', { msg: value }).
+          success(function(data, status, headers, config) {
+            console.log('fetch function working');
+            console.log(data);
+          }).
+          error(function(data, status, headers, config) {
+            console.log('fetch function messed up!');
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+          });
+      }).error(function(data, status, headers, config){
+        console.log('error posting!!');
+      })
     };
 
 });
-
-// jQuery
-
-$(document).ready(function(){
-  $('.nativeLang').on('change', function(){
-    var test = $( ".nativeLang option:selected" ).text();
-    console.log(test);
-  })
-})

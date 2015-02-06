@@ -125,6 +125,10 @@ app.post('/signup', User.signUpUser);
 
 app.post('/signin', User.signInUser);
 
+app.post('/api/updateNative', User.setNative);
+app.post('/api/updateNativeRating', User.setNativeRating);
+app.post('/api/updateDesired', User.setDesired);
+
 app.get('/logout', User.logoutUser);
 app.post('/logout', User.signInUser);
 
@@ -154,5 +158,7 @@ app.get('/auth/facebook/callback',
       res.redirect('/#/signin');
     });
 });
+
+
 
 module.exports = app;

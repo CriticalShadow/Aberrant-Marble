@@ -157,16 +157,94 @@ exports.setUser = function (username) {
   });
 };
 
-exports.setNative = function (lang) {
+exports.setNative = function (req, res) {
+  var userID = req.cookies.u_id;
+  var newNativeLang = req.body.msg;
 
+  Users.findOne({ where : { 
+    id: userID }
+  })   
+  .on('success', function(user){
+    if(user){
+      user.updateAttributes({
+        native: newNativeLang
+        }) 
+    }
+    if(!user){
+      console.log('could not find user with this ID');
+    }
+  })
+  .complete(function (err, user) {
+    if (!!err) {
+      console.log('An error occurred while creating the table: user.create', err);
+    }
+  });
+}
+
+exports.setNativeRating = function (req, res) {
+  var userID = req.cookies.u_id;
+  var newNativeRating = req.body.msg;
+
+  Users.findOne({ where : { 
+    id: userID }
+  })   
+  .on('success', function(user){
+    if(user){
+      user.updateAttributes({
+        nativeRating: newNativeRating
+        }) 
+    }
+    if(!user){
+      console.log('could not find user with this ID');
+    }
+  })
+  .complete(function (err, user) {
+    if (!!err) {
+      console.log('An error occurred while creating the table: user.create', err);
+    }
+  });
 };
 
-exports.setNativeRating = function (rating) {
+exports.setDesired = function (req, res) {
+  var userID = req.cookies.u_id;
+  var newDesired = req.body.msg;
 
+  Users.findOne({ where : { 
+    id: userID }
+  })   
+  .on('success', function(user){
+    if(user){
+      console.log('setting desired now');
+      user.updateAttributes({
+        desireLang: newDesired
+        }) 
+    }
+    if(!user){
+      console.log('could not find user with this ID');
+    }
+  })
+  .complete(function (err, user) {
+    if (!!err) {
+      console.log('An error occurred while querying the table: ', err);
+    } else {
+      console.log('made it to newDesired query!')
+      Users
+      .findAll({ where: {native: newDesired}})
+      .complete(function(err, results){
+        if(err){
+          console.log('error querying');
+          return;
+        } else if (results === null){
+          console.log('no matches');
+        } else {
+          for (var i = 0; i < results.length; i++) {
+            console.log('RESULTS!!!: ', results[i].dataValues);
+          }
+        }
+      });
+    }
+  });
 };
 
-exports.setDesired = function (lang) {
-
-};
 
 
