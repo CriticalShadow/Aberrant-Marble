@@ -35,8 +35,10 @@ exports.signInUser = function (req, res) {
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
           res.cookie('u_id', user.id);
+          console.log('req.headers', req.headers);
           var parsedCookie = req.headers.cookie ? req.headers.cookie.split('event.sid=s%3A')[1].split('.')[0] : null;
           exports.userTable[user.id] = parsedCookie;
+          res.cookie('connection.id', parsedCookie);
           console.log(exports.userTable);
           res.redirect('/#/dashboard');
       } else {
