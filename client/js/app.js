@@ -56,6 +56,8 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
       $scope.comm = $window.comm;
       $scope.roomId = $window.roomId;
 
+      $scope.myId = $window.myId;
+
       $scope.$watch($scope.comm, function() {
          $scope.comm = $window.comm;
          console.log('$scope.comm', $scope.comm);
