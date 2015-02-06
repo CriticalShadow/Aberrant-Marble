@@ -240,6 +240,7 @@ exports.setDesired = function (req, res) {
           for (var i = 0; i < results.length; i++) {
             console.log('RESULTS!!!: ', results[i].dataValues);
           }
+          res.send(results);
         }
       });
     }

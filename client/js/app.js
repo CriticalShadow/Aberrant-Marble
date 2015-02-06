@@ -363,17 +363,7 @@ angular.module('translateModule', [])
   $scope.updateDesiredLang = function(value) {
     $http.post('/api/updateDesired', { msg: value }).
       success(function(data, status, headers, config){
-        console.log('successful posting!, fetching results');
-        $http.get('/api/updateDesired', { msg: value }).
-          success(function(data, status, headers, config) {
-            console.log('fetch function working');
-            console.log(data);
-          }).
-          error(function(data, status, headers, config) {
-            console.log('fetch function messed up!');
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-          });
+        console.log(data);
       }).error(function(data, status, headers, config){
         console.log('error posting!!');
       })
