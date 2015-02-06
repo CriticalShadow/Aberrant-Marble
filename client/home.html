@@ -31,28 +31,6 @@
       <button type="button" class="btn btn-primary" ng-click="changeTopic()">Change Topic</button>
     </div>
     <br>
-    <div ng-if="!language.native"class="list-group col-md-4 fx-fade-left fx-speed-500 fx-easing-back">
-      <h2> I want to practice...  </h2>
-      <a ng-repeat="lang in languages"  href="#" ng-click="language.desired=lang[0]" class="list-group-item">
-        <span class="flag-icon flag-icon-{{ lang[1] }}"></span>
-        {{ lang[0] }}
-        <span class="glyphicon glyphicon-menu-right right" aria-hidden="true"></span>
-      </a>
-    </div>
-    <div ng-if="language.desired && !language.native" class="list-group col-md-4 fx-fade-left fx-speed-500 fx-easing-back">
-      <h2> My native language is...  </h2>
-      <a ng-repeat="lang in languages"  href="#" ng-click="language.native=lang[0]; submitLanguages(language);" class="list-group-item">
-        <span class="flag-icon flag-icon-{{ lang[1] }}"></span>
-        {{ lang[0] }}
-        <span class="glyphicon glyphicon-menu-right right" aria-hidden="true"></span>
-      </a>
-    </div>
-    <div id="videos" ng-show="language.native">
-      <div id='myVideo' class="inline">
-        <video id='localVideo' autoplay></video>
-      </div>
-    </div>
-    <br>
     <form class="form-horizontal" id='chatApp' ng-show='showChatApp'>
       <div class="form-group">
         <textarea class="form-control" id='chatBox' readonly ng-model='convo'></textarea><br>
