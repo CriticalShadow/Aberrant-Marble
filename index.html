@@ -23,6 +23,13 @@
       <video id='localVideo' autoplay></video>
     </div>
   </div>
+  <form class="form-horizontal" id='chatApp' style="display: none">
+    <div class="form-group">
+      <textarea class="form-control" id='chatBox' readonly ng-model='convo'>.fgfsdfas</textarea><br>
+      <input class="form-control inline" id='chatMsg' type='text' ng-keypress='handleKeyPress($event)' ng-model='msg'>
+      <button class="btn btn-primary inline" ng-click='sendMsg()'>Send</button>
+    </div>
+  </form>
   <div ng-include="'./client/footer.html'"></div>
 
   <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
@@ -30,6 +37,8 @@
   <script>
       var socket = io();
       var comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
+
+      window.comm = comm;
 
       socket.on('connected', function (data) {
         console.log(data);
@@ -44,6 +53,8 @@
         console.log("JOining room", data);
         comm.connect(data);
 
+        window.roomId = data;
+
         comm.on('local', function (options) {
           console.log(options.stream);
           $('#localVideo').attr("src", options.stream);
@@ -56,10 +67,11 @@
           foreignVidDiv.append(options.video)
           foreignVidDiv.children().addClass('foreignVideo');
           $('#videos').prepend(foreignVidDiv);
-          // document.getElementById('videos').insertBefore(document.createElement("$BUTTON")options.video, document.getElementById('myVideo'));
+          // document.getElementById('videos').insertBefore(document.createElement("button")options.video, document.getElementById('myVideo'));
           // $scope.$apply(function () { 
           //   $scope.showChatApp = true; 
           // });
+          $('#chatApp').css('display', 'block');
         });
       });
       
@@ -67,6 +79,9 @@
         console.log("New room: ", data);
 
         comm.connect(data.room);
+
+        window.roomId = data.room;
+
         socket.emit('roomRequest', data);
 
         // Show video of the user
@@ -82,27 +97,31 @@
           foreignVidDiv.append(options.video)
           foreignVidDiv.children().addClass('foreignVideo');
           $('#videos').prepend(foreignVidDiv);
-          // document.getElementById('videos').insertBefore(document.createElement("$BUTTON")options.video, document.getElementById('myVideo'));
+          // document.getElementById('videos').insertBefore(document.createElement("button"), document.getElementById('myVideo'));
           // $scope.$apply(function () { 
           //   $scope.showChatApp = true; 
           // });
+          $('#chatApp').css('display', 'block');
         });
 
         // // When a chat message is received from the language partner,
         // // translate the message using Google Translate and
         // // display both the original message and the translated message
-        // $scope.comm.on('data', function (options) {
-        //   $scope.$apply(function(){
-        //     Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)
-        //     .then(function (translatedMsg) {
-        //       console.log(translatedMsg);
-        //       var translatedText = translatedMsg.data.translations[0].translatedText
-        //       $scope.convo += 'Them: ' + options.data + '\n';
-        //       $scope.convo += 'Them (translated): ' + translatedText + '\n';
-        //       $scope.scrollBottom();
-        //     })
-        //   });
-        // });
+        comm.on('data', function (options) {
+          console.log('options', options);
+
+          $('#chatBox').text('Them: ' + options.data + '\n');
+          // $scope.$apply(function(){
+          //   Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)
+          //   .then(function (translatedMsg) {
+          //     console.log(translatedMsg);
+              // var translatedText = translatedMsg.data.translations[0].translatedText
+              // $scope.convo += 'Them: ' + options.data + '\n';
+              // $scope.convo += 'Them (translated): ' + translatedText + '\n';
+              // $scope.scrollBottom();
+          //   })
+          // });
+        });
 
         // // When the language partner leaves, remove the video and chatbox
         // $scope.comm.on('disconnect', function (options) {
