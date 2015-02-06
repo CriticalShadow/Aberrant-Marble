@@ -48,7 +48,7 @@ io.on('connection', function (socket) {
   //Creates the key-value pair for session ID and socket ID
   cookieParser('secret')(socket.handshake, null, function () { 
     console.log(socket.handshake);
-    session_id = socket.handshake.signedCookies['event.sid'] || Guid.v4();;
+    session_id = socket.handshake.cookies['connection.id'] || Guid.v4();
     socket_id = socket.id;
     app.sessionStore[session_id] = socket_id;
     console.log('app.sessionStore', app.sessionStore);
@@ -56,10 +56,10 @@ io.on('connection', function (socket) {
   });
 
   //Destroy the session-socket key-value pair in our sessionStorage table
-  socket.on('disconnect', function () {
-    delete app.sessionStore[session_id];
-    console.log(app.sessionStore);
-  });
+  // socket.on('disconnect', function () {
+  //   delete app.sessionStore[session_id];
+  //   console.log(app.sessionStore);
+  // });
 
   socket.emit('connected', 'I am connected');
 
