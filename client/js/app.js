@@ -282,29 +282,29 @@ angular.module('translateModule', [])
 })
 
 .controller('dashboardController', function ($scope, $http, $location, $log) {
-
+  $scope.myID = document.cookie.slice(5);
   $scope.online = true;
 
   $scope.users = [{
-    firstName: 'Gary',
-    lastName: 'Hepburn',
+    firstname: 'Gary',
+    lastname: 'Hepburn',
     photoUrl: 'https://41.media.tumblr.com/tumblr_mdyrwdkunc1rlif9vo1_500.jpg',
     id: 1
   },{
-    firstName: 'Ron',
-    lastName: 'Arnaldo',
+    firstname: 'Ron',
+    lastname: 'Arnaldo',
     photoUrl: 'http://www.somuchviral.com/wp-content/uploads/2014/03/nicolas-cage1.jpg',
     id: 2
   },{
-    firstName: 'Flo',
-    lastName: 'Chapman',
+    firstname: 'Flo',
+    lastname: 'Chapman',
     photoUrl: 'client/assets/208238_6580859075_4368_n.jpg',
     id: 3
   }];
 
   $scope.user = {
-    firstName: 'John',
-    lastName: 'Williams',
+    firstname: 'John',
+    lastname: 'Williams',
     photoUrl: 'http://www.musicweb-international.com/film/williams.gif'
   }
 
@@ -363,7 +363,12 @@ angular.module('translateModule', [])
   $scope.updateDesiredLang = function(value) {
     $http.post('/api/updateDesired', { msg: value }).
       success(function(data, status, headers, config){
-        console.log(data);
+        $scope.users = [];
+        for (var i = 0; i < data.length; i++) {
+          data[i].photoUrl = 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png';
+          data[i].password = '';
+          $scope.users.push(data[i]);
+        };
       }).error(function(data, status, headers, config){
         console.log('error posting!!');
       })

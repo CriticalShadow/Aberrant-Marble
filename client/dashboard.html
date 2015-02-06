@@ -20,7 +20,7 @@
 <div class="jumbotron" ng-controller="dashboardController">
   <div class="container">
     <div class="col-md-3">
-      <h2>Welcome, {{user.firstName}}!</h2>
+      <h2>Welcome, {{user.firstname}}!</h2>
       <div class="userimage" style="background: url({{user.photoUrl}}) no-repeat;"></div>
           <h4 class="languageChange">Change Native Language</h4>
           <span class="custom-dropdown custom-dropdown--white">
@@ -46,10 +46,11 @@
       <h2>Your Language Matches</h2>
       <div class="usermatches col-md-9">
         <div ng-repeat="user in users" class="col-md-4">
-          <h4 class="matchtext">{{user.firstName}} {{user.lastName}}</h4>
+          <h4 class="matchtext">{{user.firstname}} {{user.lastname}}</h4>
           <img src="{{user.photoUrl}}" class="matchphotos">
           <!-- <span class="onlineIndicator">{{online}}</span> -->
           <br>
+          <h5>{{user.nativeRating}}</h5>
           <button class="btn btn-primary connectButton" ng-click="connect({'u_id': 1, 'my_id': 2})" id="{{user.id}}">
             Connect
           </button>
