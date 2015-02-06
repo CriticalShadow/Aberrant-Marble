@@ -20,6 +20,7 @@ exports.signInUser = function(req, res) {
   Users.findOne({ where: 
     { username: username }
   })
+<<<<<<< HEAD
   .then(function (user){
     // bcrypt.compare(password, user.password, function(err, result) {
     //   if (result) {
@@ -31,6 +32,17 @@ exports.signInUser = function(req, res) {
       if (user.password === password) {
         res.cookie('u_id', user.id);
         res.redirect('/#/dashboard');
+=======
+  .then(function(user){
+    bcrypt.compare(password, user.password, function(err, result) {
+      if (result) {
+        req.session.regenerate(function(){
+          req.session.user = username;
+          res.cookie('u_id', user.id);
+          res.redirect('/#/dashboard');
+        });
+      // if (user.password === password) {
+>>>>>>> Created handler that stores data from user profile page, fully functioning
       } else {
         console.log('wrooooong password or log in!');
         res.redirect('/#/signin');
@@ -40,6 +52,7 @@ exports.signInUser = function(req, res) {
     console.log('user doesnt exist');
     res.redirect('/#/');
   });
+});
 };
 
 exports.signUpUser = function (req, res) {
@@ -51,38 +64,67 @@ exports.signUpUser = function (req, res) {
   })
   .then(function(user) {
     if (user) {
-      res.cookie('u_id', user.id);
-      res.redirect('/#/profile');
+      res.redirect('/#/signin');
     }
     if (!user) {
-      Users.create({
-          username: username,
-          password: password
-          // firstname: req.body.firstname, //add later?
-          // lastname: req.body.lastname, //add later?
-          // native: req.body.native, //add later?
-          // desired: req.body.desired //add later?
-        })
-        .complete(function (err, user) {
-          if (!!err) {
-            console.log('An error occurred while creating the table: user.create', err);
-          } else {
-            console.log('User created: ', user.username);
-            res.cookie('u_id', user.id);
-            res.redirect('/#/profile');
-          }
+      bcrypt.genSalt(10, function(error,result) {
+        bcrypt.hash(password, result, null, function(err, hash) {
+          Users.create({
+              username: username,
+              salt: result,
+              password: hash
+              // firstname: req.body.firstname, //add later?
+              // lastname: req.body.lastname, //add later?
+              // native: req.body.native, //add later?
+              // desired: req.body.desired //add later?
+            })
+            .complete(function(err, user) {
+              if (!!err) {
+                console.log('An error occurred while creating the table: user.create', err);
+              } else {
+                res.cookie('u_id', user.id);
+                res.redirect('/#/profile');
+              }
+            });
         });
+      });
     }
   })
   .catch(function (err) {
     console.log('a signup error occurred: ' + err);
-    res.redirect('../../client/signin.html');
+    res.redirect('/#/signin');
   });
 };
 
 exports.saveProfile = function (req, res) {
-  console.log(req.body);
-  res.sendStatus('/#/dashboard');
+  var userID = req.cookies.u_id;
+  console.log('prof here: ' + req.body.nativeLangs.prof);
+  console.log(typeof req.body.nativeLangs.prof);
+
+  Users.findOne({ where : { 
+    id: userID }
+  })   
+  .on('success', function(user){
+    if(user){
+      user.updateAttributes({
+        firstname: req.body.firstName,
+        lastname: req.body.lastName,
+        native: req.body.nativeLangs.lang,
+        desireLang: req.body.desiredLangs.lang,
+        nativeRating: req.body.nativeLangs.prof
+        }) 
+    }
+    if(!user){
+      console.log('could not find user with this ID');
+    }
+  })p
+  .complete(function(err, user) {
+    if (!!err) {
+      console.log('An error occurred while creating the table: user.create', err);
+    } else {
+      res.redirect('/#/dashboard');
+    }
+  });
 }
 
 exports.setUser = function (username) {
