@@ -20,19 +20,6 @@ exports.signInUser = function(req, res) {
   Users.findOne({ where: 
     { username: username }
   })
-<<<<<<< HEAD
-  .then(function (user){
-    // bcrypt.compare(password, user.password, function(err, result) {
-    //   if (result) {
-    //     req.session.regenerate(function(){
-    //       req.session.user = username;
-    //       console.log(req.session);
-    //       res.redirect('/#/dashboard');
-    //     });
-      if (user.password === password) {
-        res.cookie('u_id', user.id);
-        res.redirect('/#/dashboard');
-=======
   .then(function(user){
     bcrypt.compare(password, user.password, function(err, result) {
       if (result) {
@@ -41,8 +28,6 @@ exports.signInUser = function(req, res) {
           res.cookie('u_id', user.id);
           res.redirect('/#/dashboard');
         });
-      // if (user.password === password) {
->>>>>>> Created handler that stores data from user profile page, fully functioning
       } else {
         console.log('wrooooong password or log in!');
         res.redirect('/#/signin');
@@ -117,7 +102,7 @@ exports.saveProfile = function (req, res) {
     if(!user){
       console.log('could not find user with this ID');
     }
-  })p
+  })
   .complete(function(err, user) {
     if (!!err) {
       console.log('An error occurred while creating the table: user.create', err);
