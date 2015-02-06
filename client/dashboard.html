@@ -22,38 +22,22 @@
     <div class="col-md-3">
       <h2>Welcome, {{user.firstName}}!</h2>
       <div class="userimage" style="background: url({{user.photoUrl}}) no-repeat;"></div>
-        <form>
-        <h4 class="languageChange">Change Native Language</h4>
+          <h4 class="languageChange">Change Native Language</h4>
           <span class="custom-dropdown custom-dropdown--white">
-            <select class="custom-dropdown__select custom-dropdown__select--white" required>
-              <option selected="true" disabled="disabled">Change Native Language</option>
-              <option>English</option>
-              <option>Chinese</option>
-              <option>Spanish</option>
-              <option>French</option>
-              <option>Italian</option>
-            </select>
-          </span>
-          <span class="custom-dropdown custom-dropdown--white">
-            <select class="custom-dropdown__select custom-dropdown__select--white" required>
-              <option selected="true" disabled="disabled">Native Language Confidence Level</option>
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
-              <option>Fluent</option>
-            </select>
+            <select class="custom-dropdown__select custom-dropdown__select--white" ng-options="lang as lang.name for lang in langNative" ng-model="lang1" x-ng-change="updateNativeLang(lang1.name)">
+            <option style="display:none" value="">Change Native Language</option>
           </span>
         <br>
-        <h4 class="languageChange">Change Desired Language</h4>
+        <h4>Test</h4>
           <span class="custom-dropdown custom-dropdown--white">
-            <select class="custom-dropdown__select custom-dropdown__select--white" required>
-              <option selected="true" disabled="disabled">Change Desired Language</option>
-              <option>English</option>
-              <option>Chinese</option>
-              <option>Spanish</option>
-              <option>French</option>
-              <option>Italian</option>
-            </select>
+            <select class="custom-dropdown__select custom-dropdown__select--white" ng-options="prof as prof.name for prof in profs" ng-model="prof" x-ng-change="updateNativeLangRating(prof.name)"required>
+            <option style="display:none" value="">Native Confidence Level</option>
+          </span>
+        <br>
+          <h4 class="languageChange">Change Desired Language</h4>
+          <span class="custom-dropdown custom-dropdown--white">
+            <select class="custom-dropdown__select custom-dropdown__select--white" ng-options="lang as lang.name for lang in langDesired" ng-model="lang2" x-ng-change="updateDesiredLang(lang2.name)">
+            <option style="display:none" value="">Change Desired Language</option>
           </span>
           <input type="submit" value="Submit" class="submitDash btn btn-primary">
         </form>
@@ -71,5 +55,4 @@
           <hr>
       </div>
     </div>
-  </div>
 </div>

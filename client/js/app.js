@@ -262,17 +262,43 @@ angular.module('translateModule', [])
 });
 
 
+  $scope.langNative = [
+    {name:'English'},
+    {name:'Chinese'},
+    {name:'Spanish'},
+    {name:'French'},
+    {name:'Italian'}
+  ];
 
+  $scope.langDesired = [
+    {name:'English'},
+    {name:'Chinese'},
+    {name:'Spanish'},
+    {name:'French'},
+    {name:'Italian'}
+  ];
 
+  $scope.profs = [
+    {name:'Beginner'},
+    {name:'Intermediate'},
+    {name:'Advanced'},
+    {name:'Fluent'}
+  ];
 
+  $scope.status = {
+    isopen: false
+  };
 
+  $scope.updateNativeLang = function(value) {
+    console.log('Native: '+value);
+    };
 
+  $scope.updateDesiredLang = function(value) {
+    console.log('Desired: '+value);
+    };
 
+  $scope.updateDesiredLangRating = function(value) {
+    console.log('Desired-Rating: '+value);
+    };
 
-
-
-
-
-
-
-
+});
