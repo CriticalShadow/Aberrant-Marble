@@ -258,10 +258,6 @@ angular.module('translateModule', [])
     socket.emit('connectionreq', userId);
   }
 
-
-});
-
-
   $scope.langNative = [
     {name:'English'},
     {name:'Chinese'},
@@ -302,3 +298,12 @@ angular.module('translateModule', [])
     };
 
 });
+
+// jQuery
+
+$(document).ready(function(){
+  $('.nativeLang').on('change', function(){
+    var test = $( ".nativeLang option:selected" ).text();
+    console.log(test);
+  })
+})
