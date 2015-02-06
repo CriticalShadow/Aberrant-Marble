@@ -23,7 +23,6 @@ exports.signInUser = function (req, res) {
   var password = req.body.password;
 
   console.log(req.headers.cookie);
-  var parsedCookie = req.headers.cookie ? req.headers.cookie.split('event.sid=s%3A')[1].split('.')[0] : null;
 
   Users.find({ where: 
     { username: username }
@@ -35,12 +34,10 @@ exports.signInUser = function (req, res) {
     }
     bcrypt.compare(password, user.password, function(err, result) {
       if (result) {
-        req.session.regenerate(function(){
-          req.session.user = username;
           res.cookie('u_id', user.id);
+          var parsedCookie = req.headers.cookie ? req.headers.cookie.split('event.sid=s%3A')[1].split('.')[0] : null;
           exports.userTable[user.id] = parsedCookie;
           res.redirect('/#/dashboard');
-        });
       } else {
         console.log('wrooooong password or log in!');
         res.redirect('/#/signin');

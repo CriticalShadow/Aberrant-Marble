@@ -65,10 +65,16 @@
           <img src="{{user.photoUrl}}" class="matchphotos">
           <!-- <span class="onlineIndicator">{{online}}</span> -->
           <br>
-          <button class="btn btn-primary connectButton" ng-click="connect(7)" id="{{user.id}}">
+          <button class="btn btn-primary connectButton" ng-click="connect(1)" id="{{user.id}}">
             Connect
           </button>
           <hr>
       </div>
     </div>
+  </div>
+  <div id="videos">
+    <div id='myVideo' class="inline">
+      <video id='localVideo' autoplay></video>
+    </div>
+  </div>
 </div>

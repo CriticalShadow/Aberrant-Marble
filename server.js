@@ -27,9 +27,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(session({
   secret: 'secret',
-  resave: false,
+  resave: true,
   key: 'event.sid',
-  saveUninitialized: true
+  saveUninitialized: false
 }));
 
 
@@ -66,9 +66,11 @@ io.on('connection', function (socket) {
     console.log('got to connection req', data);
     var socketId = app.sessionStore[User.userTable[data]];
     console.log('socketId', socketId);
+    console.log("user table", User.userTable);
     console.log('app.sessionStore', app.sessionStore);
 
-    socket.to(socketId).emit('connecting', 'Hello!');
+    var newRoom = crypto.pseudoRandomBytes(256).toString('base64');
+    socket.to(socketId).emit('connecting', newRoom);
   });
   
 });
@@ -107,7 +109,7 @@ app.get('/api/getroom', function(request, response) {
   } else {
     console.log('new room');
     var newRoom = crypto.pseudoRandomBytes(256).toString('base64');
-    console.log(newRoom);
+    console.log(typeof newRoom);
     queues[Queue.stringify(nativeLanguage,desiredLanguage)].push(newRoom);
     response.status(200).send(newRoom);
   }
