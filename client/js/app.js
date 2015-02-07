@@ -301,31 +301,8 @@ angular.module('translateModule', [])
 })
 
 .controller('dashboardController', function ($scope, $http, $location, $log) {
-  $scope.myID = document.cookie.slice(5);
+
   $scope.online = true;
-
-  $scope.users = [{
-    firstname: 'Gary',
-    lastname: 'Hepburn',
-    photoUrl: 'https://41.media.tumblr.com/tumblr_mdyrwdkunc1rlif9vo1_500.jpg',
-    id: 1
-  },{
-    firstname: 'Ron',
-    lastname: 'Arnaldo',
-    photoUrl: 'http://www.somuchviral.com/wp-content/uploads/2014/03/nicolas-cage1.jpg',
-    id: 2
-  },{
-    firstname: 'Flo',
-    lastname: 'Chapman',
-    photoUrl: 'client/assets/208238_6580859075_4368_n.jpg',
-    id: 3
-  }];
-
-  $scope.user = {
-    firstname: 'John',
-    lastname: 'Williams',
-    photoUrl: 'http://www.musicweb-international.com/film/williams.gif'
-  }
 
   $scope.disconnectOther;
   $scope.disconnectMe;
@@ -384,6 +361,31 @@ angular.module('translateModule', [])
   $scope.status = {
     isopen: false
   };
+
+  $scope.init = function(){
+    $http.get('/api/initialGet').
+      success(function(data, status, headers, config) {
+        // this callback will be called asynchronously
+        // when the response is available
+
+       // $scope.user = [];
+        // data[0].photoUrl = 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png';
+        // data[0].password = '';
+        console.log(data);
+          $scope.user = {
+            firstname: data.firstname || data.username,
+            lastname: data.lastname,
+            photoUrl: 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png'
+          }
+          console.log(data.desireLang);
+          $scope.updateDesiredLang(data.desireLang);
+
+        console.log('success!');
+      }).
+      error(function(data, status, headers, config) {
+        console.log('failed!!');
+      });
+  }
 
   $scope.updateNativeLang = function(value) {
     $http.post('/api/updateNative', { msg: value }).

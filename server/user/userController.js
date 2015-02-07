@@ -207,6 +207,42 @@ exports.setNativeRating = function (req, res) {
   });
 };
 
+exports.initialGet = function (req, res) {
+  var userID = req.cookies.u_id;
+
+  Users.findOne({ where : { 
+    id: userID }
+  })   
+  .on('success', function(user){
+    if(user){
+      console.log('query successful!');
+    }
+    if(!user){
+      console.log('could not find user with this ID');
+    }
+  })
+  .complete(function (err, user) {
+    if (!!err) {
+      console.log('An error occurred while querying the table: ', err);
+    } else {
+      console.log('made it to newDesired query!')
+      Users
+      .findOne({ where: {id: userID}})
+      .complete(function(err, results){
+        if(err){
+          console.log('error querying');
+          return;
+        } else if (results === null){
+          console.log('no matches');
+          return;
+        } else {
+          res.send(results);
+        }
+      });
+    }
+  });
+}
+
 exports.setDesired = function (req, res) {
   var userID = req.cookies.u_id;
   var newDesired = req.body.msg;
