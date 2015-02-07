@@ -95,7 +95,7 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
         // $scope.convo += 'Them: ' + options.data + '\n';
         $scope.$apply(function(){
           console.log('got to apply');
-          Translate.translateMsg(options.data, 'English', 'Spanish')//$scope.language.native, $scope.language.desired)
+          Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)//$scope.language.native, $scope.language.desired)
           .then(function (translatedMsg) {
             console.log('translatedMsg', translatedMsg);
             var translatedText = translatedMsg.data.translations[0].translatedText
@@ -201,6 +201,7 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
         $scope.$apply(function () {
           $scope.showChatApp = false;
         });
+        document.getElementById('chatBox').remove();
       });
 
     });
@@ -326,10 +327,35 @@ angular.module('translateModule', [])
     photoUrl: 'http://www.musicweb-international.com/film/williams.gif'
   }
 
-  $scope.connect = function(userId) {
-    console.log('user id', userId);
+  $scope.disconnectOther;
+  $scope.disconnectMe;
+
+  $scope.disconnect = function (userId) {
+
+    $scope.comm.close();
+
+    console.log('$scope.disconnectId', $scope.disconnectOther);
+
     var socket = io();
-    socket.emit('connectionreq', userId);
+    socket.emit('end', $scope.disconnectOther);
+    socket.emit('end', $scope.disconnectMe);
+
+    document.getElementById('videos').remove();
+
+    $scope.showChatApp = false;
+
+    document.getElementById('chatBox').remove();
+  }
+
+  $scope.connect = function(obj) {
+    $scope.disconnectOther = obj.u_id;
+    $scope.disconnectMe = obj.my_id;
+    console.log('user id', obj.u_id);
+    console.log('obj', obj)
+    $scope.language.native = obj.native;
+    $scope.language.desired = obj.desired;
+    var socket = io();
+    socket.emit('connectionreq', obj);
   }
 
   $scope.langNative = [
@@ -362,6 +388,7 @@ angular.module('translateModule', [])
   $scope.updateNativeLang = function(value) {
     $http.post('/api/updateNative', { msg: value }).
       success(function(data, status, headers, config){
+        console.log('native data', data);
         console.log('successful posting!');
       }).error(function(data, status, headers, config){
         console.log('error posting!!');
@@ -382,6 +409,7 @@ angular.module('translateModule', [])
     $http.post('/api/updateDesired', { msg: value }).
       success(function(data, status, headers, config){
         $scope.users = [];
+        console.log('desired data', data)
         for (var i = 0; i < data.length; i++) {
           data[i].photoUrl = 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png';
           data[i].password = '';

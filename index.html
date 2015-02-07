@@ -67,6 +67,15 @@
         window.sessionStorage.setItem('event.sid', data);
         document.cookie = 'event.sid=s%3A' + data;
       });
+
+      socket.on('close', function (data) {
+        console.log('END IN CLIENT');
+        $('#videos').remove();
+        $('#chatBox').remove();
+        $('.btn-warning').remove();
+        $('#chatApp').remove()
+        comm.close();
+      });
       
       socket.on('joinRoom', function (data) {
         console.log("JOining room", data);
@@ -91,6 +100,7 @@
           //   $scope.showChatApp = true; 
           // });
           $('#chatApp').css('display', 'block');
+          $('.btn-warning').css('display', 'block');
         });
       });
       
