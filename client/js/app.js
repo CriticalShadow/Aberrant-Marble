@@ -320,7 +320,6 @@ angular.module('translateModule', [])
           lastname: data.lastname,
           photoUrl: 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png'
         }
-
         $scope.updateDesiredLang(data.desireLang);
       }).
       error(function (data, status, headers, config) {
@@ -328,18 +327,16 @@ angular.module('translateModule', [])
       });
   }
 
-  $scope.updateNativeLang = function(value) {
+  $scope.updateNativeLang = function (value) {
     $http.post('/api/updateNative', { msg: value }).
       success(function (data, status, headers, config) {
-        console.log('native data', data);
         console.log('successful posting!');
       }).error(function (data, status, headers, config) {
         console.log('error posting!!');
       });
   };
 
-  $scope.updateNativeLangRating = function(value) {
-    console.log(value);
+  $scope.updateNativeLangRating = function (value) {
     $http.post('/api/updateNativeRating', { msg: value }).
       success(function (data, status, headers, config) {
         console.log('successful posting!');
