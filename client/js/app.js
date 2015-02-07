@@ -318,6 +318,9 @@ angular.module('translateModule', [])
         $scope.user = {
           firstname: data.firstname || data.username,
           lastname: data.lastname,
+          nativeLang: data.native,
+          nativeLangRating:data.nativeRating,
+          desiredLang: data.desireLang,
           photoUrl: 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png'
         }
         $scope.updateDesiredLang(data.desireLang);
