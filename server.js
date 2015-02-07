@@ -61,7 +61,15 @@ io.on('connection', function (socket) {
   //   console.log(app.sessionStore);
   // });
 
-  socket.emit('connected', 'I am connected');
+
+  socket.on('end', function (userId) {
+    console.log('end in server');
+    console.log('userId', userId);
+    console.log('User.userTable[userId]', User.userTable[userId]);
+    var socketId = app.sessionStore[User.userTable[userId]];
+    console.log('socketId', socketId);
+    socket.to(socketId).emit('close', userId);
+  });
 
   socket.on('connectionreq', function (data) {
     console.log("user table", User.userTable);

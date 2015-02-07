@@ -51,12 +51,15 @@
           <!-- <span class="onlineIndicator">{{online}}</span> -->
           <br>
           <h5>{{user.nativeRating}}</h5>
-          <button class="btn btn-primary connectButton" ng-click="connect({'u_id': user.id, 'my_id': myId})" id="{{user.id}}">
+          <button class="btn btn-primary connectButton" ng-click="connect({'u_id': user.id, 'my_id': myId, 'native': lang1.name, 'desired': lang2.name})" id="{{user.id}}">
             Connect
           </button>
           <hr>
       </div>
     </div>
+    <button type="button" ng-click="disconnect({'user': user.id})" style="display: none;" class="btn btn-warning">
+      Disconnect
+    </button>
     <div id="videos">
     <div id='myVideo' class="inline">
       <video id='localVideo' autoplay></video>
