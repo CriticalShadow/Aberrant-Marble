@@ -7,7 +7,6 @@ var Promise = require('bluebird');
 var app = require('../../server.js');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-// var bodyParser = require('body-parser');
 
 exports.logoutUser = function (req, res) {
   req.session.destroy(function (){
@@ -22,8 +21,6 @@ exports.signInUser = function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
 
-  console.log(req.headers.cookie);
-
   Users.find({ where: 
     { username: username }
   })
@@ -35,14 +32,11 @@ exports.signInUser = function (req, res) {
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
           res.cookie('u_id', user.id);
-          console.log('req.headers', req.headers);
           var parsedCookie = req.headers.cookie ? req.headers.cookie.split('event.sid=s%3A')[1].split('.')[0] : null;
           exports.userTable[user.id] = parsedCookie;
           res.cookie('connection.id', parsedCookie);
-          console.log(exports.userTable);
           res.redirect('/#/dashboard');
       } else {
-        console.log('wrooooong password or log in!');
         res.redirect('/#/signin');
       }
 
@@ -97,8 +91,6 @@ exports.signUpUser = function (req, res) {
 
 exports.saveProfile = function (req, res) {
   var userID = req.cookies.u_id;
-  console.log('prof here: ' + req.body.nativeLangs.prof);
-  console.log(typeof req.body.nativeLangs.prof);
 
   Users.findOne({ where : { 
     id: userID }

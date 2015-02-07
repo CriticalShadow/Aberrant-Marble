@@ -43,85 +43,45 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
   $scope.waiting = false;
   $scope.topics = ['How did you spend your last vacation?', 'Describe your hometown', 'What do you do for a living?', 'What kind of food do you like to eat?', 'Describe your family', 'What do you like to do for fun?', 'Describe your mother', 'Describe your perfect day', 'Where would you like to travel?'];
   $scope.topic = $scope.topics[0];
+  $scope.comm = $window.comm;
+  $scope.roomId = $window.roomId;
+  $scope.myId = $window.myId;
 
-  // $scope.submitLanguages = function (languageSelections) {
-    // return $http({
-    //   method: 'GET',
-    //   url: '/api/getroom',
-    //   params: languageSelections
-    // })
-    // .success(function (data) {
-      // $scope.comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
+  $scope.$watch($scope.comm, function() {
+    $scope.comm = $window.comm;
+  });
 
-      $scope.comm = $window.comm;
-      $scope.roomId = $window.roomId;
+  if ($scope.comm && $scope.roomId) {
+    $scope.comm.connect($scope.roomId);
+  }
 
-      $scope.myId = $window.myId;
-
-      $scope.$watch($scope.comm, function() {
-         $scope.comm = $window.comm;
-         console.log('$scope.comm', $scope.comm);
-       });
-
-      if ($scope.comm && $scope.roomId) {
-        $scope.comm.connect($scope.roomId);
-      }
-
-
-      // // Show video of the user
-      // $scope.comm.on('local', function (options) {
-      //   console.log(options.stream);
-      //   $('#localVideo').attr("src", options.stream);
-      // });
-
-      // // When two people are connected, display the video of the language partner
-      // // and show the chat app
-      // $scope.comm.on('connected', function (options) {
-      //   var foreignVidDiv = $('<div class="inline"></div>');
-      //   foreignVidDiv.append(options.video)
-      //   foreignVidDiv.children().addClass('foreignVideo');
-      //   $('#videos').prepend(foreignVidDiv);
-      //   // document.getElementById('videos').insertBefore(document.createElement("$BUTTON")options.video, document.getElementById('myVideo'));
-      //   $scope.$apply(function () { 
-      //     $scope.showChatApp = true; 
-      //   });
-      // });
-
-      // When a chat message is received from the language partner,
-      // translate the message using Google Translate and
-      // display both the original message and the translated message
-      $scope.comm.on('data', function (options) {
-        console.log('sent data aka a message');
-        // $scope.convo += 'Them: ' + options.data + '\n';
-        $scope.$apply(function(){
-          console.log('got to apply');
-          Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)//$scope.language.native, $scope.language.desired)
-          .then(function (translatedMsg) {
-            console.log('translatedMsg', translatedMsg);
-            var translatedText = translatedMsg.data.translations[0].translatedText
-            $scope.convo += 'Them: ' + options.data + '\n';
-            $scope.convo += 'Them (translated): ' + translatedText + '\n';
-            $scope.scrollBottom();
-          })
-        });
-      })
-
-      // When the language partner leaves, remove the video and chatbox
-      $scope.comm.on('disconnect', function (options) {
-        document.getElementById(options.callerID).remove();
-        $scope.$apply(function () {
-          $scope.showChatApp = false;
-        });
+  // When a chat message is received from the language partner,
+  // translate the message using Google Translate and
+  // display both the original message and the translated message
+  $scope.comm.on('data', function (options) {
+    $scope.$apply(function(){
+      Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)//$scope.language.native, $scope.language.desired)
+      .then(function (translatedMsg) {
+        var translatedText = translatedMsg.data.translations[0].translatedText
+        $scope.convo += 'Them: ' + options.data + '\n';
+        $scope.convo += 'Them (translated): ' + translatedText + '\n';
+        $scope.scrollBottom();
       });
-  //   })
-  // }
+    });
+  });
 
-
+  // When the language partner leaves, remove the video and chatbox
+  $scope.comm.on('disconnect', function (options) {
+    document.getElementById(options.callerID).remove();
+    $scope.$apply(function () {
+      $scope.showChatApp = false;
+    });
+  });
 
   // Function to send a message to the language partner
   // and display the sent message in the chatbox
   $scope.sendMsg = function () {
-    if($scope.msg.trim() !== '') {
+    if ($scope.msg.trim() !== '') {
       $scope.comm.send($scope.msg);
       $scope.convo += 'You: ' + $scope.msg + '\n';
       $scope.msg = ''
@@ -154,15 +114,12 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
     socket.emit('connectionreq', userId);
 
     socket.on('connecting', function (data) {
-      console.log("New room: ", data);
-
       $scope.comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
 
       $scope.comm.connect(data);
 
       // Show video of the user
       $scope.comm.on('local', function (options) {
-        console.log(options.stream);
         $('#localVideo').attr("src", options.stream);
       });
 
@@ -173,11 +130,10 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
         foreignVidDiv.append(options.video)
         foreignVidDiv.children().addClass('foreignVideo');
         $('#videos').prepend(foreignVidDiv);
-        // document.getElementById('videos').insertBefore(document.createElement("$BUTTON")options.video, document.getElementById('myVideo'));
         $scope.$apply(function () { 
           $scope.showChatApp = true; 
         });
-      })
+      });
 
       // When a chat message is received from the language partner,
       // translate the message using Google Translate and
@@ -186,7 +142,6 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
         $scope.$apply(function(){
           Translate.translateMsg(options.data, $scope.language.native, $scope.language.desired)
           .then(function (translatedMsg) {
-            console.log(translatedMsg);
             var translatedText = translatedMsg.data.translations[0].translatedText
             $scope.convo += 'Them: ' + options.data + '\n';
             $scope.convo += 'Them (translated): ' + translatedText + '\n';
@@ -237,7 +192,7 @@ angular.module('languageApp', ['translateModule', 'ngFx', 'ui.router', 'ui.boots
 
 angular.module('translateModule', [])
 
-.factory('Translate', function($http){
+.factory('Translate', function ($http) {
 
   // Values are the language codes for Google Translate
   var languageDict = {
@@ -308,12 +263,9 @@ angular.module('translateModule', [])
   $scope.disconnectMe;
 
   $scope.disconnect = function (userId) {
+    var socket = io();
 
     $scope.comm.close();
-
-    console.log('$scope.disconnectId', $scope.disconnectOther);
-
-    var socket = io();
     socket.emit('end', $scope.disconnectOther);
     socket.emit('end', $scope.disconnectMe);
 
@@ -324,11 +276,9 @@ angular.module('translateModule', [])
     document.getElementById('chatBox').remove();
   }
 
-  $scope.connect = function(obj) {
+  $scope.connect = function (obj) {
     $scope.disconnectOther = obj.u_id;
     $scope.disconnectMe = obj.my_id;
-    console.log('user id', obj.u_id);
-    console.log('obj', obj)
     $scope.language.native = obj.native;
     $scope.language.desired = obj.desired;
     var socket = io();
@@ -364,47 +314,38 @@ angular.module('translateModule', [])
 
   $scope.init = function(){
     $http.get('/api/initialGet').
-      success(function(data, status, headers, config) {
-        // this callback will be called asynchronously
-        // when the response is available
+      success(function (data, status, headers, config) {
+        $scope.user = {
+          firstname: data.firstname || data.username,
+          lastname: data.lastname,
+          photoUrl: 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png'
+        }
 
-       // $scope.user = [];
-        // data[0].photoUrl = 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png';
-        // data[0].password = '';
-        console.log(data);
-          $scope.user = {
-            firstname: data.firstname || data.username,
-            lastname: data.lastname,
-            photoUrl: 'https://socializeapplications.com/kraft/youtube-channel/assets/images/blank_user.png'
-          }
-          console.log(data.desireLang);
-          $scope.updateDesiredLang(data.desireLang);
-
-        console.log('success!');
+        $scope.updateDesiredLang(data.desireLang);
       }).
-      error(function(data, status, headers, config) {
+      error(function (data, status, headers, config) {
         console.log('failed!!');
       });
   }
 
   $scope.updateNativeLang = function(value) {
     $http.post('/api/updateNative', { msg: value }).
-      success(function(data, status, headers, config){
+      success(function (data, status, headers, config) {
         console.log('native data', data);
         console.log('successful posting!');
-      }).error(function(data, status, headers, config){
+      }).error(function (data, status, headers, config) {
         console.log('error posting!!');
-      })
+      });
   };
 
   $scope.updateNativeLangRating = function(value) {
     console.log(value);
     $http.post('/api/updateNativeRating', { msg: value }).
-      success(function(data, status, headers, config){
+      success(function (data, status, headers, config) {
         console.log('successful posting!');
-      }).error(function(data, status, headers, config){
+      }).error(function (data, status, headers, config) {
         console.log('error posting!!');
-      })
+      });
     };
 
   $scope.updateDesiredLang = function(value) {
@@ -421,5 +362,4 @@ angular.module('translateModule', [])
         console.log('error posting!!');
       })
     };
-
 });

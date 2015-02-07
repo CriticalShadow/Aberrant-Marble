@@ -11,10 +11,6 @@ var io = require('socket.io')(http);
 var Promise = require('bluebird');
 var User = require('./server/user/userController');
 var Users = require('./db/index');
-// config file to instantiate all queues
-var queues = require('./server/queue/queueCollection.js');
-var queueModel = require('./server/queue/queueModel.js');
-
 var passport = require('./server/facebookSignin.js');
 
 var port = process.env.PORT || 3000;
@@ -47,35 +43,22 @@ io.on('connection', function (socket) {
 
   //Creates the key-value pair for session ID and socket ID
   cookieParser('secret')(socket.handshake, null, function () { 
-    console.log(socket.handshake);
     session_id = socket.handshake.cookies['connection.id'] || Guid.v4();
     socket_id = socket.id;
     app.sessionStore[session_id] = socket_id;
-    console.log('app.sessionStore', app.sessionStore);
     socket.emit('session', session_id);
   });
 
-  //Destroy the session-socket key-value pair in our sessionStorage table
-  // socket.on('disconnect', function () {
-  //   delete app.sessionStore[session_id];
-  //   console.log(app.sessionStore);
-  // });
-
-
   socket.on('end', function (userId) {
-    console.log('end in server');
-    console.log('userId', userId);
-    console.log('User.userTable[userId]', User.userTable[userId]);
     var socketId = app.sessionStore[User.userTable[userId]];
-    console.log('socketId', socketId);
     socket.to(socketId).emit('close', userId);
   });
 
   socket.on('connectionreq', function (data) {
-    console.log("user table", User.userTable);
+    console.log("User Table: ", User.userTable);
     var socketId = app.sessionStore[User.userTable[data.u_id]];
     var mySocket = app.sessionStore[User.userTable[data.my_id]];
-    console.log('app.sessionStore', app.sessionStore);
+    console.log('App Session Store: ', app.sessionStore);
 
     var newRoom = crypto.pseudoRandomBytes(256).toString('base64');
     var contents = {
@@ -103,37 +86,7 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname, '/index.html'); //home page
 });
 
-//when a user clicks his native and desired language and clicks go, send a post request to api/languages
-//create a queue for that specific language queue, then 
-app.get('/api/getroom', function(request, response) {
-
-
-  var nativeLanguage = request.query.native;
-  var desiredLanguage = request.query.desired;
-  var requireNative = (request.query.requireNative === "true");
-
-  console.log(nativeLanguage,desiredLanguage);
-
-  var nonNativePartners = queues[Queue.stringify(nativeLanguage,desiredLanguage)];
-  var nativePartners = queues[Queue.stringify(desiredLanguage,nativeLanguage)];
-  var partnerRoom = null;
-  if (!requireNative && nonNativePartners.length() > 0) {
-    partnerRoom = nonNativePartners.shift();
-    response.status(200).send(partnerRoom);
-  } else if (nativePartners.length() > 0) {
-    partnerRoom = nativePartners.shift();
-    response.status(200).send(partnerRoom);
-  } else {
-    console.log('new room');
-    var newRoom = crypto.pseudoRandomBytes(256).toString('base64');
-    console.log(newRoom);
-    queues[Queue.stringify(nativeLanguage,desiredLanguage)].push(newRoom);
-    response.status(200).send(newRoom);
-  }
-});
-
 app.post('/signup', User.signUpUser);
-
 app.post('/signin', User.signInUser);
 
 app.post('/api/updateNative', User.setNative);
@@ -171,7 +124,5 @@ app.get('/auth/facebook/callback',
       res.redirect('/#/signin');
     });
 });
-
-
 
 module.exports = app;

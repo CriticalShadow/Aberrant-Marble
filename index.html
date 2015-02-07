@@ -30,9 +30,7 @@
       return "";
    }
    window.myId = parseInt(getCookie('u_id'));
-   console.log('myId', myId);
   </script>
-
   <!-- endinject -->
 </head>
 <body ng-controller='selectLanguageController'>
@@ -56,12 +54,7 @@
   <script>
       var socket = io();
       var comm = new Icecomm('aOeyDUCGOSgnxElKI9eHiq9SRh2afLql1l1lDyxzYMYEabvTF6');
-
       window.comm = comm;
-
-      socket.on('connected', function (data) {
-        console.log(data);
-      });
 
       socket.on('session', function (data) {
         window.sessionStorage.setItem('event.sid', data);
@@ -78,9 +71,7 @@
       });
       
       socket.on('joinRoom', function (data) {
-        console.log("JOining room", data);
         comm.connect(data);
-
         window.roomId = data;
 
         comm.on('local', function (options) {
@@ -95,18 +86,12 @@
           foreignVidDiv.append(options.video)
           foreignVidDiv.children().addClass('foreignVideo');
           $('#videos').prepend(foreignVidDiv);
-          // document.getElementById('videos').insertBefore(document.createElement("button")options.video, document.getElementById('myVideo'));
-          // $scope.$apply(function () { 
-          //   $scope.showChatApp = true; 
-          // });
           $('#chatApp').css('display', 'block');
           $('.btn-warning').css('display', 'block');
         });
       });
       
       socket.on('connecting', function (data) {
-        console.log("New room: ", data);
-
         comm.connect(data.room);
 
         window.roomId = data.room;
@@ -126,10 +111,6 @@
           foreignVidDiv.append(options.video)
           foreignVidDiv.children().addClass('foreignVideo');
           $('#videos').prepend(foreignVidDiv);
-          // document.getElementById('videos').insertBefore(document.createElement("button"), document.getElementById('myVideo'));
-          // $scope.$apply(function () { 
-          //   $scope.showChatApp = true; 
-          // });
           $('#chatApp').css('display', 'block');
         });
 
@@ -151,15 +132,7 @@
           //   })
           // });
         });
-
-        // // When the language partner leaves, remove the video and chatbox
-        // $scope.comm.on('disconnect', function (options) {
-        //   document.getElementById(options.callerID).remove();
-        //   $scope.$apply(function () {
-        //     $scope.showChatApp = false;
-        //   });
-        // });
-    });
+      });
 
     </script>
 </body>
