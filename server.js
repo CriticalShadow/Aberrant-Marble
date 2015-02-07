@@ -140,6 +140,8 @@ app.post('/api/updateNative', User.setNative);
 app.post('/api/updateNativeRating', User.setNativeRating);
 app.post('/api/updateDesired', User.setDesired);
 
+app.get('/api/initialGet', User.initialGet);
+
 app.get('/logout', User.logoutUser);
 app.post('/logout', User.signInUser);
 
