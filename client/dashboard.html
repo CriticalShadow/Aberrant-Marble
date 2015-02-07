@@ -25,20 +25,20 @@
           <h4 class="languageChange">Change Native Language</h4>
           <span class="custom-dropdown custom-dropdown--white">
             <select class="custom-dropdown__select custom-dropdown__select--white" ng-options="lang as lang.name for lang in langNative" ng-model="lang1" x-ng-change="updateNativeLang(lang1.name)">
-            <option style="display:none" value="">Change Native Language</option>
+            <option style="display:none" value="">{{user.nativeLang}}</option>
             </select>
           </span>
         <br>
           <span class="custom-dropdown custom-dropdown--white">
             <select class="custom-dropdown__select custom-dropdown__select--white" ng-options="prof as prof.name for prof in profs" ng-model="prof1" x-ng-change="updateNativeLangRating(prof1.name)"required>
-            <option style="display:none" value="">Native Confidence Level</option>
+            <option style="display:none" value="">{{user.nativeLangRating}}</option>
             </select>
           </span>
         <br>
           <h4 class="languageChange">Change Desired Language</h4>
           <span class="custom-dropdown custom-dropdown--white">
             <select class="custom-dropdown__select custom-dropdown__select--white" ng-options="lang as lang.name for lang in langDesired" ng-model="lang2" x-ng-change="updateDesiredLang(lang2.name)">
-            <option style="display:none" value="">Change Desired Language</option>
+            <option style="display:none" value="">{{user.desiredLang}}</option>
             </select>
           </span>
         </form>
